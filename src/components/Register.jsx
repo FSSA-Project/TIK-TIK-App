@@ -25,7 +25,7 @@ const RegisterForm = () => {
   return (
     <div className="form-container">
       <h1>Register</h1>
-      <p>Lorem Ipsum is simply dummy text of the printing</p>
+      <p>Stay organized effortlessly: Your tasks, your way, every day.</p>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <input
