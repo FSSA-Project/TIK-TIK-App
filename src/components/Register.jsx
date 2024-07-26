@@ -32,7 +32,7 @@ const RegisterForm = () => {
             type="text"
             id="username"
             name="username"
-            placeholder="Name"
+            placeholder="Username"
             value={formData.username}
             onChange={handleChange}
             pattern="^[a-zA-Z0-9_@./#&+-]*$"
@@ -83,7 +83,7 @@ const RegisterForm = () => {
         <button className="social-button facebook">f</button>
       </div>
       <p className="login-link">
-        Already have an account? <a href="/login">Log In</a>
+        Already have an account? <a href="/">Log In</a>
       </p>
     </div>
   );
