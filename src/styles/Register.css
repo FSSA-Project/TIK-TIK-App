@@ -12,7 +12,7 @@ body {
     /* box-shadow: 0px 50px 100px -20px rgba(50, 50, 93, 0.25), 0px 30px 60px -30px rgba(0, 0, 0, 0.3), inset 0px -2px 6px 0px rgba(10, 37, 64, 0.35); */
     background-color: #e0e0e0;
     padding: 3em;
-    border-radius: 10px;
+    border-radius: 25px;
     width: 120%;
     max-width: 27em;
     text-align: center;
@@ -41,6 +41,7 @@ body {
     margin: 5px 0;
     border-radius: 10px;
     border: 1px solid #828080;
+    border:none;
     box-sizing: border-box;
   }
   
@@ -54,7 +55,7 @@ body {
     background-color: black;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     cursor: pointer;
     font-size: 16px;
   }
@@ -68,6 +69,7 @@ body {
     align-items: center;
     text-align: center;
     margin: 20px 0;
+    Font-weight: bold;
   }
   
   .separator::before,
@@ -169,3 +171,8 @@ body {
     }
   }
   
+
+  label {
+    display: flex;
+    font-size: 10px;
+}
