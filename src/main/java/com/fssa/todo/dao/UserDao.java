@@ -2,22 +2,19 @@ package com.fssa.todo.dao;
 
 
 import com.fssa.todo.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import java.sql.ResultSet;
+import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 @Repository
 public interface UserDao extends JpaRepository<User, Long> {
+
+    User findByName(String name);
+    User findByEmail(String email);
 
 
     /**

@@ -14,7 +14,7 @@ public class TodoAppApiApplication {
          * Below the code for check the dotenv for run
          * the locally
          */
-//        Dotenv dotenv = Dotenv.configure().directory("./.env").load();
+//        Dotenv dotenv = Dotenv.load();
 //
 //        // Set environment variables
 //        System.setProperty("DB_URL", dotenv.get("DB_URL"));

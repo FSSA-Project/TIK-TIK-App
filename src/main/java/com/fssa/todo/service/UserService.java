@@ -1,15 +1,16 @@
 package com.fssa.todo.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fssa.todo.ApiReponse.ApiResponse;
+import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.dao.UserDao;
+import com.fssa.todo.exception.UserRegistrationException;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +34,39 @@ public class UserService {
     /**
      * This is for insert the user data into the
      * database
+     *
+     * @Return String
      */
 
-    public ResponseEntity<String> addUser(User user) {
-        try {
-            userDao.save(user);
-            return new ResponseEntity<>("Data Store in DB", HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+    public UserDto addUser(UserDto userDto) {
+        // Check if a user with the same username or email already exists
+        User existingUser = userDao.findByName(userDto.getName());
+        if (existingUser != null) {
+            throw new UserRegistrationException("Username already exists");
         }
-    }
 
+        existingUser = userDao.findByEmail(userDto.getEmail());
+        if (existingUser != null) {
+            throw new UserRegistrationException("Email already exists");
+        }
+
+        // Set the user model
+        User user = new User();
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+
+        User savedUser = userDao.save(user);
+
+        // Convert saved entity to DTO in Response obj
+        UserDto savedUserDto = new UserDto();
+        savedUserDto.setId(savedUser.getId());
+        savedUserDto.setName(savedUser.getName());
+        savedUserDto.setEmail(savedUser.getEmail());
+
+        return savedUserDto;
+    }
 }
+
+
+

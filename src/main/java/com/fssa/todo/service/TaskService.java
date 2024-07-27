@@ -38,8 +38,6 @@ public class TaskService {
         task.setDescription(taskDto.getDescription());
         task.setStatus(taskDto.getStatus());
 
-        System.out.println("Received TaskDto: " + taskDto);
-
         User user = userDao.findById(taskDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
         task.setUser(user);
         Task savedTask = taskDao.save(task);

@@ -9,14 +9,19 @@ public class UserDto {
     private Long id;
     private String name;
     private String email;
+    private String password;
 
     public UserDto(User user) {
         if (user != null) {
             this.id = user.getId();
-            this.name = user.getUsername();
+            this.name = user.getName();
             this.email = user.getEmail();
         }
     }
 
+    // Create a default constructor
+    public UserDto(){
+
+    }
 
 }

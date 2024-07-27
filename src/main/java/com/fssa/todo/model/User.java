@@ -19,8 +19,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
+
+    @Column(name = "username", unique = true, nullable = false)
+    private String name;
+
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
+
+    @Column(name = "password", nullable = false)
     @JsonIgnore
     private String password;
 
@@ -33,9 +39,9 @@ public class User {
 
 
     // Below the code is constructor
-    public User(Long id, String userName, String email, String passWord) {
+    public User(Long id, String name, String email, String passWord) {
         this.id = id;
-        this.username = userName;
+        this.name = name;
         this.email = email;
         this.password = passWord;
     }
