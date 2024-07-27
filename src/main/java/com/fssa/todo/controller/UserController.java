@@ -51,4 +51,20 @@ public class UserController {
     }
 
 
+    // Below the code for login
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<UserDto>> loginUser(@RequestBody UserDto userDto){
+        try{
+            UserDto loggedInUser = userService.loginUser(userDto);
+            ApiResponse<UserDto> response = new ApiResponse<>("Login sucess",loggedInUser);
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+        catch (RuntimeException e){
+            ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(),null);
+            return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
+
+        }
+    }
+
+
 }
