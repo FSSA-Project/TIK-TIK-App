@@ -9,17 +9,36 @@ const RegisterForm = () => {
     terms: false,
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const [message,setMessage]=useState('');
+
+  const handleChange=(e)=>{
+    const {name,value,type,checked}=e.target;
     setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+        ...formData,
+        [name]:type==='checkbox' ? checked:value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Handle form submission logic here
+
+    const {username,email,password}=formData;
+
+    const response =await fetch('https://66a47db25dc27a3c190905c9.mockapi.io/Fssa-TodoList/users',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+        },
+        body:JSON.stringify({username,email,password}),
+    });
+
+    const data=await response.json();
+
+    if(response.ok){
+        setMessage('Register successfully');
+    }else{
+        setMessage('Register failed: ${data.message}');
+    }
     console.log(formData);
   };
 
@@ -76,6 +95,7 @@ const RegisterForm = () => {
         </div>
         <button type="submit">Submit</button>
       </form>
+      {message && <p>{message}</p>}
       <div className="separator">
         <span>Or</span>
       </div>
