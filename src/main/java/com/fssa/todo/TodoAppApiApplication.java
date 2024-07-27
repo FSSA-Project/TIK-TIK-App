@@ -9,7 +9,7 @@ public class TodoAppApiApplication {
 
     public static void main(String[] args) {
         // Load .env file
-        Dotenv dotenv = Dotenv.load();
+        Dotenv dotenv =   Dotenv.configure().directory("./.env").load();
 
         // Set environment variables
         System.setProperty("DB_URL", dotenv.get("DB_URL"));
