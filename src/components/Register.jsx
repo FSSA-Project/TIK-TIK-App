@@ -39,7 +39,7 @@ const RegisterForm = () => {
     }else{
         setMessage('Register failed: ${data.message}');
     }
-    console.log(formData);
+    console.log(data);
   };
 
   return (
