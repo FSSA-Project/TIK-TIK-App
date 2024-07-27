@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TodoAppApiApplication {
 
     public static void main(String[] args) {
-
-
 //         Load .env file
 
         /**
@@ -22,8 +20,8 @@ public class TodoAppApiApplication {
 //        System.setProperty("DB_URL", dotenv.get("DB_URL"));
 //        System.setProperty("DB_USERNAME", dotenv.get("DB_USERNAME"));
 //        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
-//
-//        SpringApplication.run(TodoAppApiApplication.class, args);
+
+        SpringApplication.run(TodoAppApiApplication.class, args);
 
     }
 
