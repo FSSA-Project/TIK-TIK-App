@@ -16,9 +16,6 @@ public class TaskDto {
     private Long userId;
     private UserDto user;
 
-    public TaskDto() {
-        // Default constructor
-    }
 
     public TaskDto(Task task) {
         this.id = task.getId();
@@ -30,5 +27,12 @@ public class TaskDto {
         }
         this.user = new UserDto(task.getUser());
     }
+
+    public TaskDto() {
+        // Default constructor
+    }
+
+
+
 }
 

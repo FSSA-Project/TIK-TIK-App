@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TodoAppApiApplication {
 
     public static void main(String[] args) {
-//         Load .env file
 
         /**
          * Below the code for check the dotenv for run

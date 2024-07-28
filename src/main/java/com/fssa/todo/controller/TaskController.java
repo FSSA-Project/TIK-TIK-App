@@ -3,19 +3,17 @@ package com.fssa.todo.controller;
 
 import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.TaskDto;
-import com.fssa.todo.dao.TaskDao;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.model.Task;
 import com.fssa.todo.service.TaskService;
-import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 @RestController
 @RequestMapping("api/v1/task")
@@ -27,6 +25,13 @@ public class TaskController {
     @Autowired
     private UserDao userDao;
 
+
+    /**
+     * Code for create a new Task
+     *
+     * @param taskDto
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<TaskDto>> createTask(@RequestBody TaskDto taskDto) {
         try {
@@ -43,7 +48,11 @@ public class TaskController {
         }
     }
 
-    // Below the code get the data
+    /**
+     * Code for Get all the tasks
+     *
+     * @return
+     */
     @GetMapping("/tasks")
     public ResponseEntity<ApiResponse<List<Task>>> listAllTasks() {
         try {
@@ -59,9 +68,64 @@ public class TaskController {
         }
     }
 
-    // Code for update the task
+
+    /**
+     * Below the code for get the task by id
+     *
+     * @param id
+     * @return
+     */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@PathVariable Long id) {
+        try {
+            TaskDto getTaskById = taskService.getTaskById(id);
+            ApiResponse<TaskDto> response = new ApiResponse<>("Data Retrived Successfully", getTaskById);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+    /**
+     * Below the controller code for update the task by status by id
+     *
+     * @param id
+     * @param status
+     * @return
+     */
+    @PostMapping("/update/status")
+    public ResponseEntity<ApiResponse<TaskDto>> updateStatusById(@RequestBody TaskDto taskDto) {
+        try {
+            Long taskId = taskDto.getId();
+            String status = taskDto.getStatus();
+
+            TaskDto updateStatusById = taskService.updateStatusById(taskId, status);
+            ApiResponse<TaskDto> response = new ApiResponse<>("Data Updated SuccessFully", updateStatusById);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    /**
+     * Code for update the task
+     *
+     * @param taskDto
+     * @return
+     */
     @PutMapping("/update")
-    @ResponseBody
     public ResponseEntity<ApiResponse<TaskDto>> updateTask(@RequestBody TaskDto taskDto) {
         try {
             TaskDto updatedTask = taskService.updateTask(taskDto.getId(), taskDto);
@@ -77,7 +141,12 @@ public class TaskController {
     }
 
 
-    // Code for delete the task
+    /**
+     * code for Delete the task
+     *
+     * @param payload
+     * @return
+     */
     @DeleteMapping("/delete")
     @ResponseBody
     public ResponseEntity<ApiResponse<Long>> deleteTask(@RequestBody Map<String, Object> payload) {
@@ -97,5 +166,6 @@ public class TaskController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }

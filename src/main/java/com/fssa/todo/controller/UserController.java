@@ -34,8 +34,8 @@ public class UserController {
         try {
             // Call service layer
             UserDto createdUserDto = userService.addUser(userDto);
-
             System.out.println(createdUserDto);
+
             // Build success response
             ApiResponse<UserDto> response = new ApiResponse<>("User registered successfully", createdUserDto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);

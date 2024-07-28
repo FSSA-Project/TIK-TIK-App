@@ -67,11 +67,16 @@ public class UserService {
         return savedUserDto;
     }
 
+    /**
+     * Below the code for login User
+     * @param userDto
+     * @return
+     */
     public UserDto loginUser(UserDto userDto) {
 
         User user = userDao.findByEmail(userDto.getEmail());
-
-        if (user != null && user.getPassword().equals(userDto.getPassword()) && user.getEmail().equals(userDto.getEmail()) || user.getName().equals(userDto.getName())) {
+        if (user != null && user.getPassword().equals(userDto.getPassword()) && user.getEmail().equals(userDto.getEmail())) {
+            // Create a new User Dto
             UserDto responseDto = new UserDto();
             responseDto.setName(user.getName());
             responseDto.setEmail(user.getEmail());
