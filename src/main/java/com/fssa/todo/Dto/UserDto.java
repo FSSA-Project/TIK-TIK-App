@@ -1,5 +1,7 @@
 package com.fssa.todo.Dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fssa.todo.model.User;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ public class UserDto {
     private Long id;
     private String name;
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public UserDto(User user) {
@@ -20,7 +23,7 @@ public class UserDto {
     }
 
     // Create a default constructor
-    public UserDto(){
+    public UserDto() {
 
     }
 

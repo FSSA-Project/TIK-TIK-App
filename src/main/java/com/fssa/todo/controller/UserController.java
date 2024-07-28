@@ -34,7 +34,6 @@ public class UserController {
         try {
             // Call service layer
             UserDto createdUserDto = userService.addUser(userDto);
-            System.out.println(createdUserDto);
 
             // Build success response
             ApiResponse<UserDto> response = new ApiResponse<>("User registered successfully", createdUserDto);
@@ -53,15 +52,17 @@ public class UserController {
 
     // Below the code for login
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserDto>> loginUser(@RequestBody UserDto userDto){
-        try{
-            UserDto loggedInUser = userService.loginUser(userDto);
-            ApiResponse<UserDto> response = new ApiResponse<>("Login sucess",loggedInUser);
-            return new ResponseEntity<>(response,HttpStatus.OK);
-        }
-        catch (RuntimeException e){
-            ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(),null);
-            return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ApiResponse<UserDto>> loginUser(@RequestBody UserDto userDto) {
+        try {
+            String email = userDto.getEmail();
+            String password = userDto.getPassword();
+            UserDto loggedInUser = userService.loginUser(email, password);
+            System.out.println(loggedInUser + "Controller");
+            ApiResponse<UserDto> response = new ApiResponse<>("Login success", loggedInUser);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
 
         }
     }

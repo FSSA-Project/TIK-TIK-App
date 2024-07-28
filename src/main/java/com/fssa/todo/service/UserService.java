@@ -64,27 +64,28 @@ public class UserService {
         savedUserDto.setName(savedUser.getName());
         savedUserDto.setEmail(savedUser.getEmail());
 
+
         return savedUserDto;
     }
 
     /**
      * Below the code for login User
+     *
      * @param userDto
      * @return
      */
-    public UserDto loginUser(UserDto userDto) {
+    public UserDto loginUser(String email, String password) {
 
-        User user = userDao.findByEmail(userDto.getEmail());
-        if (user != null && user.getPassword().equals(userDto.getPassword()) && user.getEmail().equals(userDto.getEmail())) {
+        User user = userDao.findByEmail(email);
+        if (user != null && user.getPassword().equals(password)) {
             // Create a new User Dto
             UserDto responseDto = new UserDto();
+            responseDto.setId(user.getId());
             responseDto.setName(user.getName());
             responseDto.setEmail(user.getEmail());
-            responseDto.setId(user.getId());
 
             return responseDto;
-        }
-        else{
+        } else {
             throw new RuntimeException("Invaild username or password");
         }
     }
