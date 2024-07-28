@@ -1,39 +1,93 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const LoginForm = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
 
-        console.log('Username:', username);
-        console.log('Password:', password);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    try {
+      const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
+      });
 
+      const data = await response.json();
+      console.log(data);
 
-    return (
-        <div className="form-container">
-        <h1>Sign in</h1>
-        <form onSubmit={handleSubmit}>
-      <div className='form-group'>
-        <input type='text' className='sign-in-username' placeholder="Username or email" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-      <div className='form-group'>
-        <input type='password' className='sign-in-password' placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </div>
+      if (response.ok) {
+        setMessage('Register successfully');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      } else {
+        setMessage(`Register failed: ${data.message}`);
+      }
+    } catch (error) {
+      setMessage('Register failed: Network error');
+      console.error(error);
+    }
+  };
 
-        <button type='submit'>Login</button>
+  return (
+    <div className="form-container login">
+      <h1>Welcome Back</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <input
+            type="text"
+            className="sign-in-username"
+            placeholder="Username or email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            className="sign-in-password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
+        <button type="submit">Login</button>
       </form>
-      <br></br>
+      <div className="separator">
+        <span>OR</span>
+      </div>
+      <div className="social-buttons">
+        <button className="social-button google">
+          <span>G</span> Sign in with Google
+        </button>
+      </div>
+      <br />
       <p className="login-link">
-        New to account? <Link to="/register">Register</Link>
+        Don't have an account? <Link to="/register">Sign Up here</Link>
       </p>
-     </div>
-    );
-}
+      {message && <p className="message">{message}</p>}
+    </div>
+  );
+};
 
-export default Login;
+export default LoginForm;

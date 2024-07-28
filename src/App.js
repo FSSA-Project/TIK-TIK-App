@@ -17,3 +17,9 @@ function App() {
 }
 
 export default App;
+
+
+// deploy app by these cmd 
+
+// npm run build
+// netlify deploy --dir=build
