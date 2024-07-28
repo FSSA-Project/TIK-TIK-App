@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.w3c.dom.stylesheets.LinkStyle;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,6 +31,15 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @Column(name = "phonenumber", unique = true)
+    private String phoneNumber;
+
+    @Column(name = "dob")
+    private Date dob;
+
+    @Column(name = "address")
+    private String address;
+
 
     // TODO: need to understand the code
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -39,11 +49,14 @@ public class User {
 
 
     // Below the code is constructor
-    public User(Long id, String name, String email, String passWord) {
+    public User(Long id, String name, String email, String password, String phoneNumber, Date dob, String address) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = passWord;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.dob = dob;
+        this.address = address;
     }
 
     public User() {
