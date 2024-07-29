@@ -29,7 +29,6 @@ public class UserService {
     private JwtUtil jwtUtil;
 
 
-    @Cacheable(value = "order")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
             return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);

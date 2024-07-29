@@ -80,7 +80,6 @@ public class TaskController {
      */
 
     @GetMapping("/{id}")
-    @Cacheable(key = "#id", value = "Task")
     public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@PathVariable Long id) {
         try {
             TaskDto getTaskById = taskService.getTaskById(id);
