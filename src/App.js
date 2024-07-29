@@ -23,3 +23,8 @@ export default App;
 
 // npm run build
 // netlify deploy --dir=build
+
+
+
+//for icon
+//npm install --save @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome

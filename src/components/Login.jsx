@@ -2,24 +2,38 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email address is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long';
+    }
+    return newErrors;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
 
     try {
       const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/user/login', {
@@ -31,18 +45,14 @@ const LoginForm = () => {
       });
 
       const data = await response.json();
-      console.log(data);
-
       if (response.ok) {
-        setMessage('Register successfully');
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
+        setMessage('Login successful');
+        setTimeout(() => navigate('/'), 2000);
       } else {
-        setMessage(`Register failed: ${data.message}`);
+        setMessage(`Login failed: ${data.message}`);
       }
     } catch (error) {
-      setMessage('Register failed: Network error');
+      setMessage('Login failed: Network error');
       console.error(error);
     }
   };
@@ -55,11 +65,12 @@ const LoginForm = () => {
           <input
             type="text"
             className="sign-in-username"
-            placeholder="Username or email"
+            placeholder="Email"
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
+          {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div className="form-group">
           <input
@@ -70,6 +81,7 @@ const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
           />
+          {errors.password && <p className="error">{errors.password}</p>}
         </div>
         <button type="submit">Login</button>
       </form>
