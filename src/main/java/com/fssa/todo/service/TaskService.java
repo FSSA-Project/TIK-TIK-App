@@ -62,9 +62,11 @@ public class TaskService {
     public TaskDto updateTask(Long id, TaskDto taskDto) {
 
         Task existingtask = taskDao.findById(id).orElseThrow(() -> new RuntimeException("Task is not found"));
+        existingtask.setId(taskDto.getId());
         existingtask.setTitle(taskDto.getTitle());
         existingtask.setDescription(taskDto.getDescription());
         existingtask.setStatus(taskDto.getStatus());
+        existingtask.setCreatedAt(taskDto.getCreatedAt());
 
         Task updatedTask = taskDao.save(existingtask);
         return new TaskDto(updatedTask);
@@ -101,6 +103,9 @@ public class TaskService {
             taskDto.setTitle(existingTask.getTitle());
             taskDto.setDescription(existingTask.getDescription());
             taskDto.setStatus(existingTask.getStatus());
+            taskDto.setCreatedAt(existingTask.getCreatedAt());
+            taskDto.setUserId(existingTask.getId());
+
             return taskDto;
         } else {
             throw new RuntimeException("Validation error!");
@@ -120,11 +125,15 @@ public class TaskService {
     public TaskDto updateStatusById(Long id, String status) {
         // Check the validation
         if (id != null && id > 0 && !status.isBlank() && !status.isEmpty()) {
-            // Create a Taskdto method
+            // Create a TaskDTO method
             TaskDto taskDto = new TaskDto();
             Task existingTask = taskDao.findById(id).orElseThrow(() -> new RuntimeException("Task is not found"));
-            taskDto.setStatus(existingTask.getStatus());
-            taskDto.setId(existingTask.getId());
+            taskDto.setId(id);
+            taskDto.setTitle(existingTask.getTitle());
+            taskDto.setDescription(existingTask.getDescription());
+            taskDto.setStatus(status);
+            taskDto.setCreatedAt(taskDto.getCreatedAt());
+            taskDto.setUserId(id);
 
             return taskDto;
         } else {

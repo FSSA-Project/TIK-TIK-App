@@ -2,16 +2,12 @@ package com.fssa.todo.controller;
 
 
 import com.fssa.todo.ApiReponse.ApiResponse;
-import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.Dto.UserDto;
-import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.exception.UserRegistrationException;
 import com.fssa.todo.jwtutil.JwtUtil;
 import com.fssa.todo.model.User;
 import com.fssa.todo.service.UserService;
-import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

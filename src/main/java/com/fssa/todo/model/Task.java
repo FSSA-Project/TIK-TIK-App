@@ -1,13 +1,9 @@
 package com.fssa.todo.model;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.context.annotation.Primary;
-
-import java.security.PrivateKey;
+import java.util.Date;
 
 @Data
 @Entity
@@ -20,6 +16,7 @@ public class Task {
     private String title;
     private String description;
     private String status;
+    private Date createdAt;
 
     @ManyToOne // many task will user create but one single id unique
     @JoinColumn(name = "user_id", nullable = false) // it user_id refers the search the id by tasks table

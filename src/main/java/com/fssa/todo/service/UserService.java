@@ -8,13 +8,9 @@ import com.fssa.todo.exception.UserRegistrationException;
 import com.fssa.todo.jwtutil.JwtUtil;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,12 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-
+    /**
+     * Code for get the all user from the
+     * DB
+     *
+     * @return
+     */
     public ResponseEntity<List<User>> getAllUsers() {
         try {
             return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);
@@ -43,7 +44,6 @@ public class UserService {
      *
      * @Return String
      */
-
     public UserDto addUser(UserDto userDto) {
         // Check if a user with the same username or email already exists
         User existingUser = userDao.findByName(userDto.getName());
@@ -69,6 +69,10 @@ public class UserService {
         savedUserDto.setId(savedUser.getId());
         savedUserDto.setName(savedUser.getName());
         savedUserDto.setEmail(savedUser.getEmail());
+
+        // Create JWT token
+        String token = jwtUtil.generateToken(savedUser.getEmail());
+        savedUserDto.setToken(token);
 
         return savedUserDto;
     }

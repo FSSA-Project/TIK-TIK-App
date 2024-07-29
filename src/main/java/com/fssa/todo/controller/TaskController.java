@@ -7,19 +7,15 @@ import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.model.Task;
 import com.fssa.todo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 @RestController
 @RequestMapping("api/v1/task")
-@EnableCaching
 public class TaskController {
 
     @Autowired
@@ -39,8 +35,8 @@ public class TaskController {
     public ResponseEntity<ApiResponse<TaskDto>> createTask(@RequestBody TaskDto taskDto) {
         try {
 
-            if (taskDto.getUserId() == null || !userDao.existsById(taskDto.getUserId())) {
-                return new ResponseEntity<>(new ApiResponse<>("Invalid user ID", null), HttpStatus.BAD_REQUEST);
+            if (taskDto.getUserId() == null || taskDto.getUserId() > 0 || !userDao.existsById(taskDto.getUserId())) {
+                return new ResponseEntity<>(new ApiResponse<>("Userid doesn't exists", null), HttpStatus.BAD_REQUEST);
             }
             TaskDto createdTask = taskService.createTask(taskDto);
             ApiResponse<TaskDto> response = new ApiResponse<>("Task successfully created", createdTask);
@@ -75,14 +71,15 @@ public class TaskController {
     /**
      * Below the code for get the task by id
      *
-     * @param id
+     * @param taskDto
      * @return
      */
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@RequestBody TaskDto taskDto) {
         try {
-            TaskDto getTaskById = taskService.getTaskById(id);
+            TaskDto getTaskById = taskService.getTaskById(taskDto.getId());
+            System.out.println(taskDto.getId());
             ApiResponse<TaskDto> response = new ApiResponse<>("Data Retrived Successfully", getTaskById);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -151,7 +148,6 @@ public class TaskController {
      * @return
      */
     @DeleteMapping("/delete")
-    @ResponseBody
     public ResponseEntity<ApiResponse<Long>> deleteTask(@RequestBody Map<String, Object> payload) {
         try {
             Long id = Long.parseLong(payload.get("id").toString()); // Extract the ID from the payload

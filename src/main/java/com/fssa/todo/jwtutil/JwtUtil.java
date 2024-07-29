@@ -29,7 +29,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Below the code for verify the JWT token
+    /**
+     * Below the code for verify the token
+     *
+     * @param authorization
+     * @throws Exception
+     */
     public void verify(String authorization) throws Exception {
         try {
             // Remove the Bearer prefix from the token

@@ -5,6 +5,8 @@ import com.fssa.todo.model.Task;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class TaskDto {
 
@@ -12,7 +14,7 @@ public class TaskDto {
     private String title;
     private String description;
     private String status;
-    @JsonProperty("user_id")
+    private Date createdAt;
     private Long userId;
     private UserDto user;
 
@@ -22,9 +24,11 @@ public class TaskDto {
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.status = task.getStatus();
+        this.createdAt = task.getCreatedAt();
         if (task.getUser() != null) {
             this.userId = task.getUser().getId();
         }
+        assert task.getUser() != null;
         this.user = new UserDto(task.getUser());
     }
 
