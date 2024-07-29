@@ -104,7 +104,6 @@ const RegisterForm = () => {
         </div>
         <button type="submit">Sign Up</button>
       </form>
-      {message && <p>{message}</p>}
       <div className="separator">
         <span>OR</span>
       </div>
