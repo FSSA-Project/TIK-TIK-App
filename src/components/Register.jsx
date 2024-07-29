@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+
+
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -10,8 +12,25 @@ const RegisterForm = () => {
   });
 
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email address is invalid';
+    }
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters long';
+    }
+    return newErrors;
+  };
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -22,7 +41,11 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+        setErrors(formErrors);
+        return;
+      }
     const { email, username, password } = formData;
 
     try {
@@ -43,7 +66,7 @@ const RegisterForm = () => {
           navigate('/');
         }, 2000);
       } else {
-        setMessage(`Register failed: ${data?.message}`);
+        setMessage(`Register failed: ${data.message}`);
       }
     } catch (error) {
       setMessage('Register failed: Network error');
@@ -67,6 +90,7 @@ const RegisterForm = () => {
             pattern="^[a-zA-Z0-9._]+$" title="Username should only contain letters, numbers, dots, and underscores."
             required
           />
+          {errors.email && <p className="error">{errors.email}</p>}
         </div>
         <div className="form-group">
           <input
@@ -79,16 +103,31 @@ const RegisterForm = () => {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="form-group form-group password-input">
           <input
             type="password"
             id="password"
             name="password"
+            className="sign-in-password"
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
             required
           />
+          <span
+          className="toggle-password"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="grey" viewBox="0 0 24 24" width="24px" height="24px">
+              <path d="M12 4.5C7.30558 4.5 3.40156 7.65747 1.5 12C3.40156 16.3425 7.30558 19.5 12 19.5C16.6944 19.5 20.5984 16.3425 22.5 12C20.5984 7.65747 16.6944 4.5 12 4.5ZM12 17.5C8.59887 17.5 5.68657 15.1835 4.5 12C5.68657 8.81648 8.59887 6.5 12 6.5C15.4011 6.5 18.3134 8.81648 19.5 12C18.3134 15.1835 15.4011 17.5 12 17.5ZM12 9.5C10.6193 9.5 9.5 10.6193 9.5 12C9.5 13.3807 10.6193 14.5 12 14.5C13.3807 14.5 14.5 13.3807 14.5 12C14.5 10.6193 13.3807 9.5 12 9.5ZM12 13.5C11.4477 13.5 11 13.0523 11 12.5C11 11.9477 11.4477 11.5 12 11.5C12.5523 11.5 13 11.9477 13 12.5C13 13.0523 12.5523 13.5 12 13.5Z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="grey" viewBox="0 0 24 24" width="24px" height="24px">
+              <path d="M12 4.5C7.30558 4.5 3.40156 7.65747 1.5 12C3.40156 16.3425 7.30558 19.5 12 19.5C16.6944 19.5 20.5984 16.3425 22.5 12C20.5984 7.65747 16.6944 4.5 12 4.5ZM12 17.5C8.59887 17.5 5.68657 15.1835 4.5 12C5.68657 8.81648 8.59887 6.5 12 6.5C15.4011 6.5 18.3134 8.81648 19.5 12C18.3134 15.1835 15.4011 17.5 12 17.5ZM12 9.5C10.6193 9.5 9.5 10.6193 9.5 12C9.5 13.3807 10.6193 14.5 12 14.5C13.3807 14.5 14.5 13.3807 14.5 12C14.5 10.6193 13.3807 9.5 12 9.5ZM12 13.5C11.4477 13.5 11 13.0523 11 12.5C11 11.9477 11.4477 11.5 12 11.5C12.5523 11.5 13 11.9477 13 12.5C13 13.0523 12.5523 13.5 12 13.5ZM2.5 2.5L21.5 21.5L20.5 22.5L1.5 3.5L2.5 2.5Z" />
+            </svg>
+          )}
+        </span>
         </div>
         <div className="form-group">
           <label>
@@ -104,7 +143,7 @@ const RegisterForm = () => {
         </div>
         <button type="submit">Sign Up</button>
       </form>
-      {message && <div>{message}</div>}
+      {message && <p>{message}</p>}
       <div className="separator">
         <span>OR</span>
       </div>
