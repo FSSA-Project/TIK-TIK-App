@@ -43,7 +43,7 @@ const RegisterForm = () => {
           navigate('/');
         }, 2000);
       } else {
-        setMessage(`Register failed: ${data.message}`);
+        setMessage(`Register failed: ${data?.message}`);
       }
     } catch (error) {
       setMessage('Register failed: Network error');
@@ -104,6 +104,7 @@ const RegisterForm = () => {
         </div>
         <button type="submit">Sign Up</button>
       </form>
+      {message && <div>{message}</div>}
       <div className="separator">
         <span>OR</span>
       </div>
