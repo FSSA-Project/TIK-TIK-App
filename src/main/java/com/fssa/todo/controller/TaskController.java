@@ -7,6 +7,8 @@ import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.model.Task;
 import com.fssa.todo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ import java.util.StringTokenizer;
 
 @RestController
 @RequestMapping("api/v1/task")
+@EnableCaching
 public class TaskController {
 
     @Autowired
@@ -77,6 +80,7 @@ public class TaskController {
      */
 
     @GetMapping("/{id}")
+    @Cacheable(key = "#id", value = "Task")
     public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@PathVariable Long id) {
         try {
             TaskDto getTaskById = taskService.getTaskById(id);

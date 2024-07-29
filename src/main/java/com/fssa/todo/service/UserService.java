@@ -8,6 +8,7 @@ import com.fssa.todo.exception.UserRegistrationException;
 import com.fssa.todo.jwtutil.JwtUtil;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,8 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
+
+    @Cacheable(value = "order")
     public ResponseEntity<List<User>> getAllUsers() {
         try {
             return new ResponseEntity<>(userDao.findAll(), HttpStatus.OK);

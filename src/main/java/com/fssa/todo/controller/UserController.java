@@ -11,6 +11,7 @@ import com.fssa.todo.model.User;
 import com.fssa.todo.service.UserService;
 import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class UserController {
      *
      * @return
      */
+
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         return userService.getAllUsers();
@@ -50,7 +52,7 @@ public class UserController {
             UserDto createdUserDto = userService.addUser(userDto);
 
             // Build success response
-            ApiResponse<UserDto> response = new ApiResponse<>("User registered successfully", createdUserDto);
+            ApiResponse<UserDto> response = new ApiResponse<>("Registered successfully", createdUserDto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (UserRegistrationException e) {
             // Build error response with specific message
