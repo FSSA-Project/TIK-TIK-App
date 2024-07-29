@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +9,9 @@ const RegisterForm = () => {
     terms: false,
   });
 
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -17,15 +20,40 @@ const RegisterForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+
+    const { email, username, password } = formData;
+
+    try {
+      const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, name: username, password }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (response.ok) {
+        setMessage('Register successfully');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      } else {
+        setMessage(`Register failed: ${data?.message}`);
+      }
+    } catch (error) {
+      setMessage('Register failed: Network error');
+      console.error(error);
+    }
   };
 
   return (
     <div className="form-container">
-      <h1>Register</h1>
+      <h1>Join our task</h1>
       <p>Stay organized effortlessly: Your tasks, your way, every day.</p>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -36,7 +64,7 @@ const RegisterForm = () => {
             placeholder="Username"
             value={formData.username}
             onChange={handleChange}
-            pattern="^[a-zA-Z0-9_@./#&+-]*$"
+            pattern="^[a-zA-Z0-9._]+$" title="Username should only contain letters, numbers, dots, and underscores."
             required
           />
         </div>
@@ -74,14 +102,14 @@ const RegisterForm = () => {
             I agree to the terms & conditions
           </label>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">Sign Up</button>
       </form>
+      {message && <div>{message}</div>}
       <div className="separator">
-        <span>Or</span>
+        <span>OR</span>
       </div>
       <div className="social-buttons">
-        <button className="social-button google">G</button>
-        <button className="social-button facebook">f</button>
+        <button className="social-button google"><span>G</span>Sign in with Google</button>
       </div>
       <p className="login-link">
         Already have an account? <Link to="/">Log In</Link>
