@@ -9,30 +9,32 @@ body {
   height: 100vh;
   margin: 0;
   padding: 20px;
-  overflow: hidden; 
+  /* overflow: hidden;  */
 }
 
-body::before {
+.form-container-all {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/public/Downloads/image.png');
+  background-image: url('../assets/img/image.png');
   background-size: cover;
   background-position: center;
-  opacity: 0.3; 
-  z-index: -1; 
+  /* opacity: 0.3;  */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-container {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 544px;
   max-height: 714px;
-  height: 100%;
+  /* height: 100%; */
   border: 2px solid rgba(196, 208, 235, 1);
   background: rgba(242, 246, 255, 1);
   box-shadow: 4px 4px 26px 0px rgba(0, 0, 0, 0.1);
@@ -51,18 +53,28 @@ body::before {
 
 }
 .form-container.login h1 {
-
   margin-bottom: 1em;
-
 }
 
-.form-container p {
+.form-container .login-link {
   font-size: 15px;
   width: 279px;
   height:35px;
   margin-left: 9em;
   margin-bottom: 2em;
   color: rgba(15, 14, 14, 0.5);
+}
+
+.form-container .error {
+  font-size: 15px;
+  /* width: 47%;
+  height: 35px;
+  margin: 0.5em 4rem 1rem 3.5rem; */
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.1em 0em 0em 5em;
+  color: #ff3333;
+  white-space: pre-wrap;
 }
 
 .form-group {
@@ -105,8 +117,8 @@ body::before {
 .form-container .form-group.password-input .toggle-password {
   position: absolute;
   right: 84px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 35%;
+  transform: translateY(-15%);
   cursor: pointer;
   user-select: none;
 }
@@ -130,9 +142,8 @@ button {
   cursor: pointer;
 }
 
-
 .separator {
-  margin: 2.5rem 5em;
+  margin: 2.5rem 4.4em;
   border-top: 1px solid #0f0d0d;
 
   position: relative;
@@ -150,7 +161,6 @@ button {
   color: #555;
 }
 
-
 .social-button {
   width: 74%;
   padding: 0.75rem;
@@ -162,16 +172,6 @@ button {
   color: #555;
 }
 
-
-
-.social-button.google span {
- background-color: #202D48;
- color: white;
- padding: 0.5em;
- border-radius: 3em;
- margin: 0.5em;
-}
-
 .login-link {
   font-size: 0.875rem;
   margin-top: 1em;
@@ -179,12 +179,14 @@ button {
 
 .login-link a {
   color: #202D48;
- font-weight: bold;
+  font-weight: bold;
+  text-decoration: none;
 }
 
+/* Commenting this - not in the design 
 .login-link a:hover {
   text-decoration: underline;
-}
+} */
 
 /* Responsive Styles */
 @media (max-width: 600px) {
@@ -208,5 +210,29 @@ button {
 
   .login-link {
     font-size: 0.75rem;
+  }
+}
+
+.alert-message {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background-color: #202D48;
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
   }
 }
