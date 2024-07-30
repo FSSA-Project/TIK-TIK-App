@@ -46,7 +46,7 @@ const Dashboard = () => {
       </div> */}
 
       <div className="task-columns">
-        <div className='to-start'><p className='to-start-color'></p>To start</div>
+        <div className='to-start'><p className='to-start-color'></p>To Start</div>
         <div className='in-progress'><p className='in-progress-color'></p>In Progress</div>
         <div className='completed'><p className='completed-color'></p>Completed</div>
       </div>

@@ -1,8 +1,12 @@
 .task-column {
-    background: rgba(255, 255, 255, 1);
-    padding: 10px;
+    background-color: #f2f6ff;
+    padding: 20px;
     border-radius: 8px;
-    width: 30%;
+    width: 32%;
+    /* If there is an overflow of content
+    overflow: hidden;
+    overflow-y: scroll;
+    max-height: 609px; */
   }
   
   .task-column h2 {
