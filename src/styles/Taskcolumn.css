@@ -1,0 +1,26 @@
+.task-column {
+    background-color: #f2f6ff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 32%;
+    /* If there is an overflow of content
+    overflow: hidden;
+    overflow-y: scroll;
+    max-height: 609px; */
+  }
+  
+  .task-column h2 {
+    border-bottom: 2px solid;
+    padding-bottom: 10px;
+  }
+  
+  .add-new-card {
+    background: none;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    color:black;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

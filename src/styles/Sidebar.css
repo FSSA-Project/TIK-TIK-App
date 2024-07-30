@@ -1,0 +1,33 @@
+.sidebar-container {
+    width: 28%;
+    background-color:  #202d48;
+    .sidebar-header {
+        display: flex;
+        color: aquamarine;
+        font-size: xx-large;
+        gap: 2px;
+        margin: 20px 0px 0px 30px;
+        .sidebar-logo svg {
+            width: 40px;
+            height: 75px;
+            margin-top: -13px;
+        }
+        .sidebar-logo-text {
+            font-weight: bold;
+            color: #ffffff;
+        }
+    }
+
+    .sidebar-dashboard {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin: 10px 20px 0px 29px;
+        padding: 10px 35px 10px 0px;
+        background-color: #334977;
+        border-radius: 10px;
+        .sidebar-dashboard-title {
+            color: #ffffff;
+        }
+    }
+}
