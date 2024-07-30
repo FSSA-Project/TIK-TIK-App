@@ -23,3 +23,22 @@
     font-size: 20px;
   }
   
+
+  /* animation */
+  .task-card {
+    background-color: white;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    padding: 8px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .task-card.dragging {
+    background-color: lightgreen;
+  }
+  
+  .task-column.dragging-over {
+    background-color: lightblue;
+  }
+  
