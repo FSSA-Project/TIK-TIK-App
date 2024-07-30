@@ -1,0 +1,43 @@
+body {
+    background: rgba(32, 45, 72, 1);
+  }
+  
+  .dashboard {
+    background: rgba(242, 246, 255, 1);
+    padding: 20px;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 1);
+    padding: 10px 20px;
+    border-radius: 8px;
+  }
+  
+  .search input, .date-filter input {
+    margin: 0 10px;
+  }
+  
+  .new-task-btn {
+    background: #1f73b7;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    background: grey;
+    border-radius: 50%;
+  }
+  
+  .task-columns {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  

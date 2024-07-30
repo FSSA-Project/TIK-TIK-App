@@ -1,0 +1,25 @@
+.task-card {
+    background: rgba(242, 246, 255, 1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .task-card h3 {
+    margin: 0 0 10px;
+  }
+  
+  .task-date {
+    display: block;
+    margin-top: 10px;
+    color: grey;
+  }
+  
+  .card-options {
+    background: none;
+    border: none;
+    float: right;
+    font-size: 20px;
+  }
+  
