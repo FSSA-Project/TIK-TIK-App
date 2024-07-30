@@ -16,8 +16,13 @@ const RegisterForm = () => {
 
   const validateForm = () => {
     const newErrors = {};
+
+    // Check for empty fields
     if (!formData.username && !formData.email && !formData.password) {
       setMessage('Enter the credentials to register');
+    }
+    if (!formData.username) {
+      newErrors.username = 'Username is required';
     }
     if (!formData.email) {
       newErrors.email = 'Email is required';
@@ -26,11 +31,28 @@ const RegisterForm = () => {
     }
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
+    } else {
+      // Password validation rules
+      if (formData.password.length < 8 || formData.password.length > 15) {
+        newErrors.password = 'Password must be between 8 and 15 characters long';
+      } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one uppercase letter';
+      } else if (!/[a-z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one lowercase letter';
+      } else if (!/\d/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one number';
+      } else if (!/[!@#$%^&*]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one special character';
+      }
     }
+
+    if (!formData.terms) {
+      newErrors.terms = 'You must agree to the terms & conditions';
+    }
+
     return newErrors;
   };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -86,7 +108,7 @@ const RegisterForm = () => {
   return (
     <div className='form-container-all'>
     <div className="form-container">
-    {message && <span className='alert-message'>{message}</span>}
+    {message && <span id="alert-message" className='alert-message'>{message}</span>}
       <h1>Join our task</h1>
       <p>Stay organized effortlessly: Your tasks, your way, every day.</p>
       <form onSubmit={handleSubmit}>
@@ -95,6 +117,8 @@ const RegisterForm = () => {
             type="text"
             id="username"
             name="username"
+            minLength={3}
+            maxLength={12}
             placeholder="Username*"
             value={formData.username}
             onChange={handleChange}

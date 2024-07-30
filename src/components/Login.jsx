@@ -20,7 +20,20 @@ const LoginForm = () => {
     }
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } 
+    } else {
+      // Password validation rules
+      if (formData.password.length < 8 || formData.password.length > 15) {
+        newErrors.password = 'Password must be between 8 and 15 characters long';
+      } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one uppercase letter';
+      } else if (!/[a-z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one lowercase letter';
+      } else if (!/\d/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one number';
+      } else if (!/[!@#$%^&*]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one special character';
+      }
+    }
     
     return newErrors;
   };
