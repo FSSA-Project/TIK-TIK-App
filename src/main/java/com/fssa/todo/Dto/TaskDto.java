@@ -1,10 +1,8 @@
 package com.fssa.todo.Dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fssa.todo.model.Task;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.Data;
 
+import com.fssa.todo.model.Task;
+import lombok.Data;
 import java.util.Date;
 
 @Data

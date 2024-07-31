@@ -4,7 +4,6 @@ package com.fssa.todo.controller;
 import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.exception.UserRegistrationException;
-import com.fssa.todo.jwtutil.JwtUtil;
 import com.fssa.todo.model.User;
 import com.fssa.todo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * Code for retrive the users from the db
@@ -75,10 +72,6 @@ public class UserController {
             String password = userDto.getPassword();
             UserDto loggedInUser = userService.loginUser(email, password);
 
-            // Generate JWT token
-            String token = jwtUtil.generateToken(loggedInUser.getEmail());
-            // Set token in the response DTO
-            loggedInUser.setToken(token);
             ApiResponse<UserDto> response = new ApiResponse<>("Login success", loggedInUser);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {

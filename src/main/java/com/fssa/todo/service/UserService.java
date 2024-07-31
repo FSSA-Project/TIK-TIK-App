@@ -5,7 +5,6 @@ import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.exception.UserRegistrationException;
-import com.fssa.todo.jwtutil.JwtUtil;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +19,6 @@ public class UserService {
 
     @Autowired
     private UserDao userDao;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     /**
      * Code for get the all user from the
@@ -69,10 +65,6 @@ public class UserService {
         savedUserDto.setId(savedUser.getId());
         savedUserDto.setName(savedUser.getName());
         savedUserDto.setEmail(savedUser.getEmail());
-
-        // Create JWT token
-        String token = jwtUtil.generateToken(savedUser.getEmail());
-        savedUserDto.setToken(token);
 
         return savedUserDto;
     }

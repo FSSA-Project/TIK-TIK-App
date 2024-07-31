@@ -9,6 +9,7 @@ import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,8 +48,24 @@ public class TaskService {
      *
      * @return
      */
-    public List<Task> listAllTasks() {
-        return taskDao.findAll();
+    public List<TaskDto> listTasksByUserId(Long userId) {
+
+        List<Task> tasks = taskDao.findByUserId(userId);
+        if (tasks != null) {
+            List<TaskDto> taskDtos = new ArrayList<>();
+            for (Task task : tasks) {
+                TaskDto taskDto = new TaskDto();
+                taskDto.setId(task.getId());
+                taskDto.setTitle(task.getTitle());
+                taskDto.setUserId(task.getId());
+                taskDtos.add(taskDto);
+            }
+            return taskDtos;
+
+        } else {
+            throw new RuntimeException("Task is not found");
+        }
+
     }
 
 
@@ -59,6 +76,7 @@ public class TaskService {
      * @param taskDto
      * @return
      */
+
     public TaskDto updateTask(Long id, TaskDto taskDto) {
 
         Task existingtask = taskDao.findById(id).orElseThrow(() -> new RuntimeException("Task is not found"));
@@ -111,7 +129,6 @@ public class TaskService {
             throw new RuntimeException("Validation error!");
         }
     }
-
 
 
     /**

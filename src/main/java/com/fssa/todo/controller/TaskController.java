@@ -4,7 +4,6 @@ package com.fssa.todo.controller;
 import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.dao.UserDao;
-import com.fssa.todo.model.Task;
 import com.fssa.todo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,18 +51,19 @@ public class TaskController {
      *
      * @return
      */
-    @GetMapping("/tasks")
-    public ResponseEntity<ApiResponse<List<Task>>> listAllTasks() {
+    @PostMapping("/tasks")
+    public ResponseEntity<ApiResponse<List<TaskDto>>> listTasksByUserId(@RequestBody TaskDto taskDto) {
         try {
-            List<Task> tasks = taskService.listAllTasks();
-            ApiResponse<List<Task>> response = new ApiResponse<>("Data Retrived SucessFully", tasks);
+            System.out.println(taskDto.getUserId());
+            List<TaskDto> tasks = taskService.listTasksByUserId(taskDto.getUserId());
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("Data Retrieved Successfully", tasks);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
-            ApiResponse<Object> response = new ApiResponse<>(e.getMessage(), null);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            ApiResponse<Object> response = new ApiResponse<>(e.getMessage(), null);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,6 +78,7 @@ public class TaskController {
     @GetMapping
     public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@RequestBody TaskDto taskDto) {
         try {
+            Long id = taskDto.getId();
             TaskDto getTaskById = taskService.getTaskById(taskDto.getId());
             System.out.println(taskDto.getId());
             ApiResponse<TaskDto> response = new ApiResponse<>("Data Retrived Successfully", getTaskById);
