@@ -8,6 +8,7 @@ const Dashboard = () => {
     <div className='dashboard-container'>
       <Sidebar/>
     <div className="dashboard">
+      <Header1 />
       <header className="dashboard-header-container">
         <div className="dashboard-header-content-1">
         <h3 className='dashboard-header-title'>My Todo</h3>
@@ -52,13 +53,43 @@ const Dashboard = () => {
       </div>
 
       <div className="task-columns">
-        <TaskColumn title="To Start" color="blue" />
-        <TaskColumn title="In Progress" color="yellow" />
-        <TaskColumn title="Completed" color="green" />
+        <TaskColumn title="To Start" color="blue" showButton={true} />
+        <TaskColumn title="In Progress" color="yellow" showButton={false} />
+        <TaskColumn title="Completed" color="green"showButton={false} />
       </div>
     </div>
     </div>
   );
 };
+
+export const Header1 = () => {
+  return (
+    <>
+    <div className="header1-icons">
+      {/* Todo Icon */}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#a3a3a5" fill="none">
+        <path d="M11 6L21 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <path d="M11 12L21 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <path d="M11 18L21 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <path d="M3 7.39286C3 7.39286 4 8.04466 4.5 9C4.5 9 6 5.25 8 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M3 18.3929C3 18.3929 4 19.0447 4.5 20C4.5 20 6 16.25 8 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div className='arrow-icon'>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#a6a6a8" fill="none">
+        <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      </div>
+      <div className="dashboard-title">Dashboard</div>
+      <div className='arrow-icon'>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#a6a6a8" fill="none">
+        <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      </div>
+      <div className="overview-title">Overview</div>
+    </div>
+    <hr className="separator-line"/>
+    </>
+  );
+}
 
 export default Dashboard;

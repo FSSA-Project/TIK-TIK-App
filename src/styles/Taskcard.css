@@ -4,10 +4,23 @@
     border-radius: 8px;
     margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: move;
+    .task-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      svg {
+        height: 20px;
+        position: relative;
+        top: -5px;
+        cursor: pointer;
+      }
+    }
   }
   
   .task-card h3 {
-    margin: 0 0 10px;
+    /* margin: 0 0 10px; */
+    font-size: 20px;
   }
   
   .task-date {

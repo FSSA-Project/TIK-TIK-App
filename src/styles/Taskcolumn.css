@@ -3,10 +3,13 @@
     padding: 20px;
     border-radius: 8px;
     width: 32%;
-    /* If there is an overflow of content
+    /* If there is an overflow of content */
     overflow: hidden;
-    overflow-y: scroll;
-    max-height: 609px; */
+    overflow-y: auto;
+    max-height: 552px;
+    min-height: 552px;
+    height: 552px;
+    position: relative;
   }
   
   .task-column h2 {
@@ -19,8 +22,11 @@
     border: 2px dashed #ccc;
     border-radius: 8px;
     color:black;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    gap: 7px;
+    width: 100%;
   }
   
