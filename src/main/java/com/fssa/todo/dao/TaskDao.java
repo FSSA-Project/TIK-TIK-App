@@ -10,9 +10,9 @@ import java.util.List;
 
 
 @Repository
-public interface TaskDao  extends JpaRepository<Task, Long> {
+public interface TaskDao extends JpaRepository<Task, Long> {
 
-    @Query("SELECT t FROM Task t WHERE t.user_id = :userId")
-   List<Task> findByUserId(@Param("userId") Long userId);
+    @Query(value = "SELECT * FROM tasks WHERE user_id = :userId", nativeQuery = true)
+    List<Task> findByUserId(@Param("userId") Long userId);
 
 }
