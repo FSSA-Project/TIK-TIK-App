@@ -9,7 +9,10 @@ import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -30,17 +33,21 @@ public class TaskService {
      * @return
      */
     public TaskDto createTask(TaskDto taskDto) {
-
-        // Set to the task model
         Task task = new Task();
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
         task.setStatus(taskDto.getStatus());
+        task.setCreatedAt(LocalDate.now());
+        task.setDueDate(taskDto.getDueDate());
 
-        User user = userDao.findById(taskDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        task.setUser(user);
-        Task savedTask = taskDao.save(task);
-        return new TaskDto(savedTask);
+        if (taskDto.getUserId() != null) {
+            User user = userDao.findById(taskDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+            task.setUser(user);
+        }
+
+        System.out.println(task);
+        Task savedUser = taskDao.save(task);
+        return new TaskDto();
     }
 
     /**
@@ -57,9 +64,13 @@ public class TaskService {
                 TaskDto taskDto = new TaskDto();
                 taskDto.setId(task.getId());
                 taskDto.setTitle(task.getTitle());
+                taskDto.setDescription(task.getDescription());
+                taskDto.setStatus(task.getStatus());
+                taskDto.setCreatedAt(task.getCreatedAt());
                 taskDto.setUserId(task.getId());
                 taskDtos.add(taskDto);
             }
+            System.out.println(taskDtos);
             return taskDtos;
 
         } else {

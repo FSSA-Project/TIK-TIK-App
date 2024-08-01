@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -22,9 +23,9 @@ public class Task {
     private String title;
     private String description;
     private String status;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
-    private LocalDateTime dueDate;
+    @Column(name = "created_at")
+    private LocalDate createdAt;
+    private LocalDate dueDate;
 
     @ManyToOne // many task will user create but one single id unique
     @JsonManagedReference // This act as the parent

@@ -33,13 +33,14 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<TaskDto>> createTask(@RequestBody TaskDto taskDto) {
         try {
-
-            if (taskDto.getUserId() == null || taskDto.getUserId() > 0 || !userDao.existsById(taskDto.getUserId())) {
-                return new ResponseEntity<>(new ApiResponse<>("Userid doesn't exists", null), HttpStatus.BAD_REQUEST);
+            if (taskDto.getUserId() == null || !userDao.existsById(taskDto.getUserId())) {
+                return new ResponseEntity<>(new ApiResponse<>("UserId doesn't exist", null), HttpStatus.BAD_REQUEST);
             }
+            // Proceed with task creation
             TaskDto createdTask = taskService.createTask(taskDto);
             ApiResponse<TaskDto> response = new ApiResponse<>("Task successfully created", createdTask);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+
         } catch (Exception e) {
             ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -52,10 +53,10 @@ public class TaskController {
      * @return
      */
     @PostMapping("/tasks")
-    public ResponseEntity<ApiResponse<List<TaskDto>>> listTasksByUserId(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<List<TaskDto>>> listTasksByUserId(@RequestBody Map<String, Long> id) {
         try {
-            System.out.println(taskDto.getUserId());
-            List<TaskDto> tasks = taskService.listTasksByUserId(taskDto.getUserId());
+            Long userId = id.get("id");
+            List<TaskDto> tasks = taskService.listTasksByUserId(userId);
             ApiResponse<List<TaskDto>> response = new ApiResponse<>("Data Retrieved Successfully", tasks);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
