@@ -2,10 +2,7 @@ package com.fssa.todo.jwtutil;
 
 
 import io.jsonwebtoken.Claims;
-<<<<<<< HEAD
-=======
 import io.jsonwebtoken.Jwt;
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -54,14 +51,10 @@ public class jwtService {
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-<<<<<<< HEAD
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 3 minutes
-                .signWith(getKey(), SignatureAlgorithm.HS256).compact();
-=======
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 3)) // 3 minutes
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
+
 
     }
 
@@ -85,21 +78,15 @@ public class jwtService {
     }
 
     private Claims extractAllClaims(String token) {
-<<<<<<< HEAD
-        return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
-=======
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
-                .build()
-                .parseClaimsJwt(token).getBody();
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
+                .build().parseClaimsJws(token).getBody();
     }
 
-    // This method is for validate the token
+
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
-<<<<<<< HEAD
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String userName = extractUserName(token);
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -107,16 +94,6 @@ public class jwtService {
     }
 
     private Date extractExpiration(String token) {
-=======
-        return (email.equals(userDetails.getUsername()) && !isTokenExpried(token));
-    }
-
-    private boolean isTokenExpried(String token){
-        return extractExpiration(token).before(new Date());
-    }
-
-    private Date extractExpiration(String token){
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
         return extractClaim(token, Claims::getExpiration);
     }
 }

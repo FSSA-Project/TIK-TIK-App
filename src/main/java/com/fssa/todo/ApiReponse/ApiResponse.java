@@ -15,32 +15,18 @@ public class ApiResponse<T> {
     private T data;
     private String token;
 
-<<<<<<< HEAD
     // constructor with 3 parameter
     public ApiResponse(String message, T data, String token) {
         this.message = message;
         this.data = data;
         this.token = token;
     }
-
-=======
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
     // Constructor with 2 parameter
     public ApiResponse(String message, T data) {
         this.message = message;
         this.data = data;
     }
 
-<<<<<<< HEAD
-
-=======
-    // constructor with 3 parameter
-    public ApiResponse(String message, T data, String token) {
-        this.message = message;
-        this.data = data;
-        this.token = token;
-    }
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
 }
 
 
