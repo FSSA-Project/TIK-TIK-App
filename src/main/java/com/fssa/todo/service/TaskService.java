@@ -44,11 +44,9 @@ public class TaskService {
         }
 
         Task savedUser = taskDao.save(task);
-<<<<<<< HEAD
+
         return new TaskDto(savedUser);
-=======
-        return new TaskDto();
->>>>>>> d6f374cc3024ef6050749c8b4c81bbc13c2eaf7f
+
     }
 
     /**
