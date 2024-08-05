@@ -8,12 +8,10 @@ import com.fssa.todo.model.Task;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
 
 @Service
 public class TaskService {
@@ -29,7 +27,7 @@ public class TaskService {
      * Here the code for create a new
      * task
      *
-     * @param task
+     * @param taskDto
      * @return
      */
     public TaskDto createTask(TaskDto taskDto) {
@@ -45,7 +43,6 @@ public class TaskService {
             task.setUser(user);
         }
 
-        System.out.println(task);
         Task savedUser = taskDao.save(task);
         return new TaskDto();
     }
@@ -70,7 +67,6 @@ public class TaskService {
                 taskDto.setUserId(task.getId());
                 taskDtos.add(taskDto);
             }
-            System.out.println(taskDtos);
             return taskDtos;
 
         } else {

@@ -9,7 +9,11 @@ import com.fssa.todo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.fssa.todo.jwtutil.jwtService;
 
 import java.util.List;
 
@@ -17,8 +21,15 @@ import java.util.List;
 @RequestMapping("api/v1/user")
 public class UserController {
 
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private jwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
 
     /**
@@ -68,18 +79,30 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserDto>> loginUser(@RequestBody UserDto userDto) {
         try {
-            String email = userDto.getEmail();
-            String password = userDto.getPassword();
-            UserDto loggedInUser = userService.loginUser(email, password);
+            // This auth is check the password and username
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
 
-            ApiResponse<UserDto> response = new ApiResponse<>("Login success", loggedInUser);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(userDto.getEmail());
+
+                String email = userDto.getEmail();
+                String password = userDto.getPassword();
+                System.out.println(email);
+                UserDto loggedInUser = userService.loginUser(email, password);
+
+                ApiResponse<UserDto> response = new ApiResponse<>("Login success", loggedInUser, token);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                ApiResponse<UserDto> response = new ApiResponse<>("Authentication failed", null);
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
         } catch (RuntimeException e) {
             ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(), null);
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-
         }
     }
+
 
     /**
      * Code for get the  profile to show Cilent

@@ -9,6 +9,7 @@ import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserService {
 
     @Autowired
     private UserDao userDao;
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); // set the strength as 12 rounds
 
     /**
      * Code for get the all user from the
@@ -56,7 +58,7 @@ public class UserService {
         User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword((userDto.getPassword())); // Encode the password
+        user.setPassword(encoder.encode(userDto.getPassword())); // Encode the password
 
         User savedUser = userDao.save(user);
 
@@ -78,8 +80,8 @@ public class UserService {
     public UserDto loginUser(String email, String password) {
 
         User user = userDao.findByEmail(email);
-        if (user != null && user.getPassword().equals(password)) { // This will decode the password
-            // Create a new User Dto
+        if (user != null && encoder.matches(password, user.getPassword())) { // Check the password matchs
+            // Create a new UserDto
             UserDto responseDto = new UserDto();
             responseDto.setId(user.getId());
             responseDto.setName(user.getName());
@@ -87,7 +89,7 @@ public class UserService {
 
             return responseDto;
         } else {
-            throw new RuntimeException("Invaild username or password");
+            throw new RuntimeException("Invalid username or password");
         }
     }
 
