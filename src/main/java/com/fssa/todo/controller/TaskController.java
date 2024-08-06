@@ -68,47 +68,20 @@ public class TaskController {
         }
     }
 
-
-    /**
-     * Below the code for get the task by id
-     *
-     * @param taskDto
-     * @return
-     */
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@RequestBody TaskDto taskDto) {
-        try {
-            Long id = taskDto.getId();
-            TaskDto getTaskById = taskService.getTaskById(taskDto.getId());
-            System.out.println(taskDto.getId());
-            ApiResponse<TaskDto> response = new ApiResponse<>("Data Retrived Successfully", getTaskById);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-        } catch (Exception e) {
-            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-
     /**
      * Below the controller code for update the task by status by id
      *
      * @param id
-     * @param status
+     * @param taskDto
      * @return
      */
     @PostMapping("/update/status")
     public ResponseEntity<ApiResponse<TaskDto>> updateStatusById(@RequestBody TaskDto taskDto) {
         try {
             Long taskId = taskDto.getId();
-            String status = taskDto.getStatus();
+            int statusId = taskDto.getStatusId();
 
-            TaskDto updateStatusById = taskService.updateStatusById(taskId, status);
+            TaskDto updateStatusById = taskService.updateStatusById(taskId, statusId);
             ApiResponse<TaskDto> response = new ApiResponse<>("Data Updated SuccessFully", updateStatusById);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -127,11 +100,11 @@ public class TaskController {
      * @param taskDto
      * @return
      */
-    @PutMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<ApiResponse<TaskDto>> updateTask(@RequestBody TaskDto taskDto) {
         try {
             TaskDto updatedTask = taskService.updateTask(taskDto.getId(), taskDto);
-            ApiResponse<TaskDto> response = new ApiResponse<>("Task updated SucessFully", taskDto);
+            ApiResponse<TaskDto> response = new ApiResponse<>("Task updated SuccessFully", updatedTask);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
             ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);

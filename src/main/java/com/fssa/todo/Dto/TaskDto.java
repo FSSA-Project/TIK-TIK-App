@@ -5,11 +5,7 @@ import com.fssa.todo.model.Task;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -19,9 +15,9 @@ public class TaskDto {
     private Long id;
     private String title;
     private String description;
-    private String status;
     private LocalDate createdAt;
     private LocalDate dueDate;
+    private Integer statusId;
     private Long userId;
     private UserDto user;
 
@@ -29,8 +25,8 @@ public class TaskDto {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
-        this.status = task.getStatus();
         this.createdAt = task.getCreatedAt();
+        this.statusId = task.getStatusId().getId();
         if (task.getUser() != null) {
             this.userId = task.getUser().getId();
             this.user = new UserDto(task.getUser());

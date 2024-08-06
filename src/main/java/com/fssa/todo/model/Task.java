@@ -22,13 +22,19 @@ public class Task {
     private Long id;
     private String title;
     private String description;
-    private String status;
+
+    // Define many to one and this is enum
+    @ManyToOne
+    @JoinColumn(name = "task_status_id", referencedColumnName = "id")
+    private TaskStatus statusId;
+
+
     @Column(name = "created_at")
     private LocalDate createdAt;
     private LocalDate dueDate;
 
     @ManyToOne // many task will user create but one single id unique
     @JsonManagedReference // This act as the parent
-    @JoinColumn(name = "user_id", nullable = false) // it user_id refers the search the id by tasks table
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id") // it user_id refers the search the id by tasks table
     private User user;
 }

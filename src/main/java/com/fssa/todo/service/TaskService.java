@@ -3,11 +3,14 @@ package com.fssa.todo.service;
 
 import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.dao.TaskDao;
+import com.fssa.todo.dao.TaskStatusDao;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.model.Task;
+import com.fssa.todo.model.TaskStatus;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,9 @@ public class TaskService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private TaskStatusDao taskStatusDao;
+
     /**
      * Here the code for create a new
      * task
@@ -34,47 +40,39 @@ public class TaskService {
         Task task = new Task();
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
-        task.setStatus(taskDto.getStatus());
-        task.setCreatedAt(LocalDate.now());
         task.setDueDate(taskDto.getDueDate());
 
-        if (taskDto.getUserId() != null) {
-            User user = userDao.findById(taskDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        // Set the status
+        if (taskDto.getStatusId() != null && taskDto.getStatusId() > 0) {
+            TaskStatus taskStatus = taskStatusDao.findById(taskDto.getStatusId())
+                    .orElseThrow(() -> new RuntimeException("Task status not found"));
+            task.setStatusId(taskStatus);
+        }
+
+        // Set the user
+        if (taskDto.getUserId() != null && taskDto.getUserId() > 0) {
+            User user = userDao.findById(taskDto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
             task.setUser(user);
         }
 
-        Task savedUser = taskDao.save(task);
+        // Set created at date
+        task.setCreatedAt(LocalDate.now());
 
-        return new TaskDto(savedUser);
+        Task savedTask = taskDao.save(task);
 
-    }
+        // Map the saved task back to TaskDto
+        TaskDto savedTaskDto = new TaskDto();
+        savedTaskDto.setId(savedTask.getId());
+        savedTaskDto.setTitle(savedTask.getTitle());
+        savedTaskDto.setDescription(savedTask.getDescription());
+        savedTaskDto.setStatusId(savedTask.getStatusId().getId());
+        savedTaskDto.setDueDate(savedTask.getDueDate());
+        savedTaskDto.setUserId(savedTask.getUser().getId());
+        savedTaskDto.setCreatedAt(savedTask.getCreatedAt());
+        savedTaskDto.setDueDate(savedTask.getDueDate());
 
-    /**
-     * Below the code for list all the tasks
-     *
-     * @return
-     */
-    public List<TaskDto> listTasksByUserId(Long userId) {
-
-        List<Task> tasks = taskDao.findByUserId(userId);
-        if (tasks != null) {
-            List<TaskDto> taskDtos = new ArrayList<>();
-            for (Task task : tasks) {
-                TaskDto taskDto = new TaskDto();
-                taskDto.setId(task.getId());
-                taskDto.setTitle(task.getTitle());
-                taskDto.setDescription(task.getDescription());
-                taskDto.setStatus(task.getStatus());
-                taskDto.setCreatedAt(task.getCreatedAt());
-                taskDto.setUserId(task.getId());
-                taskDtos.add(taskDto);
-            }
-            return taskDtos;
-
-        } else {
-            throw new RuntimeException("Task is not found");
-        }
-
+        return savedTaskDto;
     }
 
 
@@ -87,17 +85,29 @@ public class TaskService {
      */
 
     public TaskDto updateTask(Long id, TaskDto taskDto) {
+        Task existingTask = taskDao.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
 
-        Task existingtask = taskDao.findById(id).orElseThrow(() -> new RuntimeException("Task is not found"));
-        existingtask.setId(taskDto.getId());
-        existingtask.setTitle(taskDto.getTitle());
-        existingtask.setDescription(taskDto.getDescription());
-        existingtask.setStatus(taskDto.getStatus());
-        existingtask.setCreatedAt(taskDto.getCreatedAt());
+        existingTask.setTitle(taskDto.getTitle());
+        existingTask.setDescription(taskDto.getDescription());
+        existingTask.setDueDate(taskDto.getDueDate());
 
-        Task updatedTask = taskDao.save(existingtask);
+        // Update the status if a valid status ID is provided
+        if (taskDto.getStatusId() != null && taskDto.getStatusId() > 0) {
+            TaskStatus taskStatus = taskStatusDao.findById(taskDto.getStatusId())
+                    .orElseThrow(() -> new RuntimeException("Task status not found"));
+            existingTask.setStatusId(taskStatus);
+        }
+
+        // Update the user if a valid user ID is provided
+        if (taskDto.getUserId() != null) {
+            User user = userDao.findById(taskDto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            existingTask.setUser(user);
+        }
+
+        Task updatedTask = taskDao.save(existingTask);
         return new TaskDto(updatedTask);
-
     }
 
     /**
@@ -117,54 +127,56 @@ public class TaskService {
     /**
      * Below the code for get the task by id
      *
-     * @param id
+     * @param UserId
      * @return
      */
-    public TaskDto getTaskById(Long id) {
-        // check the validation
-        if (id != null && id > 0) {
-            // Create a new obj in taskdto
-            TaskDto taskDto = new TaskDto();
-            Task existingTask = taskDao.findById(id).orElseThrow(() -> new RuntimeException("Task is not found"));
-            taskDto.setId(existingTask.getId());
-            taskDto.setTitle(existingTask.getTitle());
-            taskDto.setDescription(existingTask.getDescription());
-            taskDto.setStatus(existingTask.getStatus());
-            taskDto.setCreatedAt(existingTask.getCreatedAt());
-            taskDto.setUserId(existingTask.getId());
-
-            return taskDto;
-        } else {
+    public List<TaskDto> listTasksByUserId(Long userId) {
+        if (userId == null || userId <= 0) {
             throw new RuntimeException("Validation error!");
         }
+
+        List<Task> tasks = taskDao.findByUserId(userId);
+        if (tasks == null || tasks.isEmpty()) {
+            throw new RuntimeException("No tasks found for the user");
+        }
+
+        List<TaskDto> taskDtos = new ArrayList<>();
+        for (Task task : tasks) {
+            TaskDto taskDto = new TaskDto(task);
+            taskDtos.add(taskDto);
+        }
+        return taskDtos;
     }
 
 
     /**
      * Below the code for update the status by the id
      *
-     * @param id
-     * @param status
-     * @return
+     * @param taskId
+     * @param statusId
+     * @return updatedTask
      */
 
-    public TaskDto updateStatusById(Long id, String status) {
-        // Check the validation
-        if (id != null && id > 0 && !status.isBlank() && !status.isEmpty()) {
-            // Create a TaskDTO method
-            TaskDto taskDto = new TaskDto();
-            Task existingTask = taskDao.findById(id).orElseThrow(() -> new RuntimeException("Task is not found"));
-            taskDto.setId(id);
-            taskDto.setTitle(existingTask.getTitle());
-            taskDto.setDescription(existingTask.getDescription());
-            taskDto.setStatus(status);
-            taskDto.setCreatedAt(taskDto.getCreatedAt());
-            taskDto.setUserId(id);
-
-            return taskDto;
-        } else {
-            throw new RuntimeException("Validation error");
+    public TaskDto updateStatusById(Long taskId, int statusId) {
+        if (taskId == null || taskId <= 0 || statusId <= 0) {
+            throw new RuntimeException("Invalid task ID or status ID");
         }
 
+        // Find the existing task
+        Task task = taskDao.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
+
+        // Find the task status by ID
+        TaskStatus taskStatus = taskStatusDao.findById(statusId).orElseThrow(() -> new RuntimeException("TaskStatus not found"));
+
+        // Update the task's status
+        task.setStatusId(taskStatus);
+
+        // Save the updated task
+        Task updatedTask = taskDao.save(task);
+
+        // Convert to TaskDto
+        return new TaskDto(updatedTask);
     }
+
+
 }

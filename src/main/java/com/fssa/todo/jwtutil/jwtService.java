@@ -23,7 +23,7 @@ import java.util.function.Function;
 @Service
 public class jwtService {
 
-    private String secretKey;
+    private final String secretKey;
 
     // field is private so constructor created and set the secretKey
     public jwtService() {
@@ -51,7 +51,7 @@ public class jwtService {
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 3 minutes
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 30)) // 1 month
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -65,8 +65,7 @@ public class jwtService {
 
     }
 
-
-    // This method is for extract the useremail from the email
+    // This method is for extract the user email from the email
     public String extractEmail(String token) {
 
         return extractClaim(token, Claims::getSubject);
@@ -80,7 +79,9 @@ public class jwtService {
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
-                .build().parseClaimsJws(token).getBody();
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
 

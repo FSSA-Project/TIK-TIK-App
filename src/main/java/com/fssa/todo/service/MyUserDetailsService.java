@@ -28,7 +28,7 @@ public class MyUserDetailsService implements UserDetailsService  {
         User user = userDao.findByEmail(email); // Intract with the DB and search the name
 
         if(user == null){
-            System.out.println("User 404");
+            System.out.println("Token is Expired");
             throw  new UsernameNotFoundException("User not found");
         }
         return new UserPrincipal(user);

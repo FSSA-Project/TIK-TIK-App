@@ -12,7 +12,9 @@ import java.util.List;
 @Repository
 public interface TaskDao extends JpaRepository<Task, Long> {
 
-    @Query(value = "SELECT * FROM tasks WHERE user_id = :userId", nativeQuery = true)
-    List<Task> findByUserId(@Param("userId") Long userId);
+    List<Task> findByUserId(Long userId);
+
+//    @Query(value = "SELECT * FROM tasks WHERE user_id = :userId", nativeQuery = true)
+//    List<Task> findByUserId(@Param("userId") Long userId);
 
 }
