@@ -86,8 +86,18 @@
     border: 2px solid #e5eaf6;
     padding: 10px;
     border-radius: 10px;
+    /* width: 42%; */
   }
   
+  .search input:hover, .date-filter input:hover {
+    border: 2px solid #e5eaf6; 
+  }
+
+  .search input:focus, .date-filter input:focus {
+    border: 2px solid #e5eaf6;
+    outline: none;
+  }
+
   .new-task-btn {
     color: white;
     border: none;
