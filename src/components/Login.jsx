@@ -64,7 +64,7 @@ const LoginForm = () => {
       const data = await response.json();
       if (response.ok) {
         setMessage('Login successful');
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/dashboard'), 2000);
       } else {
         setMessage(`Login failed: ${data.message}`);
       }

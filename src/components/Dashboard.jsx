@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Dashboard.css';
-import TaskColumn from './Taskcolumn';
+import { TaskColumnCompleted, TaskColumnInProgress, TaskColumnToStart } from './Taskcolumn';
 import Sidebar from './Sidebar';
 
+// task data
+const initialTasks = [
+  { id: 1, title: "Task 1", desc: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.", date: "21/01/24", status: "toStart" },
+  { id: 2, title: "Task 2", desc: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.", date: "21/01/24", status: "inProgress" },
+  { id: 3, title: "Task 3", desc: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.", date: "21/01/24", status: "completed" },
+  { id: 4, title: "Task 4", desc: "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.", date: "21/01/24", status: "toStart" }
+];
+
 const Dashboard = () => {
+
+  const [tasks, setTasks] = useState(initialTasks);
+
+  const handleDrop = (taskId, newStatus) => {
+    setTasks(tasks.map(task =>
+      task.id === taskId ? { ...task, status: newStatus } : task
+    ));
+  };
+
+  // Filter tasks based on status
+  const toStartTasks = tasks.filter(task => task.status === 'toStart');
+  const inProgressTasks = tasks.filter(task => task.status === 'inProgress');
+  const completedTasks = tasks.filter(task => task.status === 'completed');
+
   return (
     <div className='dashboard-container'>
       <Sidebar/>
@@ -53,10 +75,28 @@ const Dashboard = () => {
       </div>
 
       <div className="task-columns">
-        <TaskColumn title="To Start" color="blue" showButton={true} />
-        <TaskColumn title="In Progress" color="yellow" showButton={false} />
-        <TaskColumn title="Completed" color="green"showButton={false} />
-      </div>
+          <TaskColumnToStart
+            title="To Start"
+            color="blue"
+            showButton={true}
+            taskCards={toStartTasks}
+            onDrop={(taskId) => handleDrop(taskId, 'toStart')} // Drop to In Progress
+          />
+          <TaskColumnInProgress
+            title="In Progress"
+            color="yellow"
+            showButton={false}
+            taskCards={inProgressTasks}
+            onDrop={(taskId) => handleDrop(taskId, 'inProgress')} // Drop to Completed
+          />
+          <TaskColumnCompleted
+            title="Completed"
+            color="green"
+            showButton={false}
+            taskCards={completedTasks}
+            onDrop={(taskId) => handleDrop(taskId, 'completed')} // Optionally handle drop here
+          />
+        </div>
     </div>
     </div>
   );

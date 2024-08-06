@@ -66,7 +66,8 @@
   .dashboard-header-container-2 {
     display: flex;
     padding: 30px 0px 0px 9px;
-    gap: 560px;
+    /* gap: 560px; */
+    justify-content: space-between;
     .search {
       position: relative;
       display: inline-block;
@@ -107,10 +108,10 @@
       display: flex;
     }
     .to-start-color, .in-progress-color, .completed-color {
-      width: 20px;
-      height: 20px;
+      width: 12px;
+      height: 12px;
       border-radius: 45%;
-      margin: 0px 7px 0px 10px;
+      margin: 6px 7px 0px 10px;
     }
     .to-start-color {
       background-color: #17a2b8;

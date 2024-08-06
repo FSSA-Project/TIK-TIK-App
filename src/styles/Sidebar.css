@@ -23,7 +23,7 @@
         justify-content: center;
         gap: 8px;
         margin: 10px 20px 0px 29px;
-        padding: 10px 35px 10px 0px;
+        padding: 10px 35px 10px 15px;
         background-color: #334977;
         border-radius: 10px;
         .sidebar-dashboard-title {
