@@ -13,6 +13,8 @@ const RegisterForm = () => {
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -71,6 +73,7 @@ const RegisterForm = () => {
     }
     const { email, username, password } = formData;
 
+    setLoading(true);
     try {
       const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/user/register', {
         method: 'POST',
@@ -87,13 +90,15 @@ const RegisterForm = () => {
         setMessage('Register successfully');
         setTimeout(() => {
           navigate('/dashboard');
-        }, 2000);
+        }, 1000);
       } else {
         setMessage(`Register failed: ${data.message}`);
       }
     } catch (error) {
       setMessage('Register failed: Network error');
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,7 +184,7 @@ const RegisterForm = () => {
             I agree to the terms & conditions
           </label>
         </div>
-        <button type="submit">Sign Up</button>
+        <button type="submit" disabled={loading}>{loading ? <div class="loader"></div> : 'Sign Up' }</button>
       </form>
       <div className="separator">
         <span>OR</span>

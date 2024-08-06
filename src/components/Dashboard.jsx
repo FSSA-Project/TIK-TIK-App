@@ -51,14 +51,14 @@ const Dashboard = () => {
         <div className="dashboard-header-container-2">
         <div className="search">
           <input type="text" placeholder="Search" />
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none" class="search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none" className="search-icon">
             <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
           </svg>
         </div>
         <div className="date-filter">
-          <input type="date" />
-          <input type="date" />
+          <input type="date" placeholder='From'/>
+          <input type="date" placeholder='To' />
         </div>
         </div>
 
@@ -69,9 +69,9 @@ const Dashboard = () => {
       </div> */}
 
       <div className="task-columns">
-        <div className='to-start'><p className='to-start-color'></p>To Start</div>
-        <div className='in-progress'><p className='in-progress-color'></p>In Progress</div>
-        <div className='completed'><p className='completed-color'></p>Completed</div>
+        <div className='to-start'><p className='to-start-color'></p>To Start (2)</div>
+        <div className='in-progress'><p className='in-progress-color'></p>In Progress (1)</div>
+        <div className='completed'><p className='completed-color'></p>Completed (1)</div>
       </div>
 
       <div className="task-columns">
