@@ -117,6 +117,24 @@ public class TaskController {
     }
 
 
+    @PostMapping("/id")
+    public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@RequestBody TaskDto taskDto) {
+        try {
+            TaskDto dto = taskService.getTaskById(taskDto.getId());
+            ApiResponse<TaskDto> response = new ApiResponse<>("Task updated SuccessFully", dto);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
+
     /**
      * code for Delete the task
      *
@@ -168,7 +186,6 @@ public class TaskController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
 }

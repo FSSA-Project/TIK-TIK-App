@@ -111,6 +111,7 @@ public class TaskService {
         return new TaskDto(updatedTask);
     }
 
+
     /**
      * below the code for delete the task
      *
@@ -190,5 +191,18 @@ public class TaskService {
             return taskStatusCountDTO;
         }
         throw new RuntimeException("No task data found for user ID");
+    }
+
+    public TaskDto getTaskById(Long id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Invalid task ID: " + id);
+        }
+
+        Task task = taskDao.findTaskById(id);
+        if (task == null) {
+            throw new RuntimeException("Task not found with id: " + id);
+        }
+
+        return new TaskDto(task);
     }
 }

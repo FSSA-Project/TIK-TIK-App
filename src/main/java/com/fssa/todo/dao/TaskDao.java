@@ -8,10 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface TaskDao extends JpaRepository<Task, Long> {
+
+    @Query("SELECT t FROM Task t WHERE t.id = :id")
+    Task findTaskById(@Param("id") Long id);
 
     List<Task> findByUserId(Long userId);
 
