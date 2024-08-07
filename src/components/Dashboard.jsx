@@ -14,6 +14,7 @@ const initialTasks = [
 const Dashboard = () => {
 
   const [tasks, setTasks] = useState(initialTasks);
+  const [inputTypeDate, setInputTypeDate] = useState('text');
 
   const handleDrop = (taskId, newStatus) => {
     setTasks(tasks.map(task =>
@@ -57,8 +58,8 @@ const Dashboard = () => {
           </svg>
         </div>
         <div className="date-filter">
-          <input type="date" placeholder='From'/>
-          <input type="date" placeholder='To' />
+          <input placeholder={inputTypeDate === 'text' ? 'From' : ''} onFocus={() => setInputTypeDate('date')} type={inputTypeDate} />
+          <input placeholder={inputTypeDate === 'text' ? 'To' : ''} onFocus={() => setInputTypeDate('date')} type={inputTypeDate} />
         </div>
         </div>
 
