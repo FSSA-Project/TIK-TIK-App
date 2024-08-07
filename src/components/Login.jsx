@@ -64,6 +64,7 @@ const LoginForm = () => {
       });
 
       const data = await response.json();
+      console.log(data.token);
       if (response.ok) {
         sessionStorage.setItem('token', data.token);
         sessionStorage.setItem('userId',data.data.id);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Taskcard.css';
 import { useDrag } from 'react-dnd';
 
-const TaskCard = ({ id, title, desc, date }) => {
+const TaskCard = ({ id, title, description, date }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
 
@@ -18,10 +18,10 @@ const TaskCard = ({ id, title, desc, date }) => {
   });
 
   const truncateDescription = (description) => {
-    if (description.length > 120) {
-      return `${description.slice(0, 112)}... `;
+    if (typeof description === 'string' && description.length > 120) {
+      return `${description.slice(0, 105)}... `;
     }
-    return description;
+    return description || '';
   };
 
   return (
@@ -30,7 +30,6 @@ const TaskCard = ({ id, title, desc, date }) => {
       className="task-card"
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-
       <div className="task-content">
         <h3 title={title} >{title}</h3>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6" onClick={handleOptionsClick}>
@@ -38,14 +37,16 @@ const TaskCard = ({ id, title, desc, date }) => {
         </svg>
         {showOptions && (
           <div className="options-menu">
+            <div className='options-menu-task'>
             <button className="option-button">Edit</button>
             <button className="option-button">Delete</button>
+              </div>
           </div>
         )}
       </div>
-      <p title={desc} >
-        {showFullDesc ? desc : truncateDescription(desc)}
-        {desc.length > 120 && (
+      <p title={description}>
+        {showFullDesc ? description : truncateDescription(description)}
+        {description.length > 120 && (
           <span
             onClick={handleToggleDesc}
             style={{ color: '#0C97ED', cursor: 'pointer' }}

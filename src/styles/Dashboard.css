@@ -12,6 +12,7 @@
     background-color: #ffffff;
     padding: 30px;
     border-radius: 12px;
+    width: 100%;
     .header1-icons {
       display: flex;
       justify-content: flex-start;
