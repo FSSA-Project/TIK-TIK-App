@@ -15,6 +15,33 @@
         top: -5px;
         cursor: pointer;
       }
+      .options-menu {
+        position: absolute;
+        top: 62px;
+        left: 335px;
+        .options-menu-task {
+          border: 2px solid #c6d2ec;
+          background-color: white;
+          border-radius: 8px;
+          padding: 7px;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+          width: 120px;
+          .option-button {
+            text-align: left;
+            font-family: 'Work Sans', sans-serif;
+            border: none;
+            font-size: 14px;
+            background: white;
+            padding: 5px 5px 5px 10px;
+          }
+          .option-button:hover {
+            background: #DDE8FF;
+            border-radius: 4px;
+          }
+        }
+      }
     }
   }
   

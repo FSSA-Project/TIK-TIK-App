@@ -1,20 +1,21 @@
 .sidebar-container {
-    width: 28%;
-    background-color:  #202d48;
+       /* min-width: 18%; 
+       width: 28% */
+       max-width: 336px !important; 
+       min-width: 16%; 
+       background-color: #202d48;
     .sidebar-header {
         display: flex;
         color: aquamarine;
         font-size: xx-large;
         gap: 2px;
-        margin: 20px 0px 0px 30px;
-        .sidebar-logo svg {
-            width: 40px;
-            height: 75px;
-            margin-top: -13px;
-        }
-        .sidebar-logo-text {
-            font-weight: bold;
-            color: #ffffff;
+        margin: 19px 0px 25px 30px;
+        .sidebar-logo {
+            width: 90%;
+            height: 40px;
+            background-image: url('../assets/img/TikTik_logo.png');
+            background-size: cover;
+            background-position: center;
         }
     }
 

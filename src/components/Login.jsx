@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
+import '../App.css';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -131,7 +132,7 @@ const LoginForm = () => {
           </span>
           {errors.password && <p className="error">{errors.password}</p>}
         </div>
-        <button type="submit" disabled={loading}>{loading ? <div class="loader"></div> : 'Login' }</button>
+        <button className='login-btn' type="submit" disabled={loading}>{loading ? <div class="loader"></div> : 'Login' }</button>
       </form>
       <div className="separator">
         <span>OR</span>

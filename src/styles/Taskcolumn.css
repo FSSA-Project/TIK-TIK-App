@@ -9,7 +9,7 @@
   max-height: 552px;
   min-height: 552px;
   height: 552px;
-  position: relative;
+  /* position: relative; */
 }
 
 /* Applicable for Scroll-y axis display in taskcolumn 

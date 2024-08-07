@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Register.css';
+import '../App.css';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -184,7 +185,7 @@ const RegisterForm = () => {
             I agree to the terms & conditions
           </label>
         </div>
-        <button type="submit" disabled={loading}>{loading ? <div class="loader"></div> : 'Sign Up' }</button>
+        <button className='register-btn' type="submit" disabled={loading}>{loading ? <div class="loader"></div> : 'Sign Up' }</button>
       </form>
       <div className="separator">
         <span>OR</span>

@@ -131,17 +131,6 @@ label{
 
 }
 
-button {
-  width: 74%;
-  padding: 0.75rem;
-  background-color:#202D48;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
 .separator {
   margin: 2.5rem 4.4em;
   border-top: 1px solid #0f0d0d;

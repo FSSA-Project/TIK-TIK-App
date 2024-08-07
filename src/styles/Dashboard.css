@@ -98,12 +98,6 @@
     outline: none;
   }
 
-  .new-task-btn {
-    color: white;
-    border: none;
-    border-radius: 8px;
-  }
-
   .new-task-btn svg {
     margin: 0px 10px 0px 0px;
   }
@@ -112,6 +106,7 @@
     display: flex;
     justify-content: space-around;
     margin-top: 18px;
+    position: relative;
     .to-start, .in-progress, .completed {
       margin-left: -265px;
       font-family: 'Work Sans', sans-serif;

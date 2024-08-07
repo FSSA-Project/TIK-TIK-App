@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/Dashboard.css';
 import { TaskColumnCompleted, TaskColumnInProgress, TaskColumnToStart } from './Taskcolumn';
 import Sidebar from './Sidebar';
+import '../App.css';
 
 // task data
 const initialTasks = [
