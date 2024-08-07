@@ -1,0 +1,46 @@
+.create-task-container {
+    background-color: white;
+    border: 2px solid #c6d2ec;
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 17px;
+    transition: background-color 0.2s
+  }
+  
+  .create-task-container input,
+  .create-task-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  .create-task-container textarea {
+    resize: none;
+  }
+
+  .button-group{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .create-task-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1f2937; 
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .create-task-container button:hover {
+    background-color: #111827; 
+  }
+  

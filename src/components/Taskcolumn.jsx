@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/Taskcolumn.css';
 import TaskCard from '../components/Taskcard.jsx';
 import { useDrop } from 'react-dnd';
+import CreateTask from './CreateTask.jsx';
 
-const TaskColumn = ({ title, color, showButton, taskCards, onDrop }) => {
+const TaskColumn = ({ title, color, showButton, taskCards, onDrop, createTask }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'task',
     drop: (item) => onDrop(item.taskId),
@@ -11,6 +12,15 @@ const TaskColumn = ({ title, color, showButton, taskCards, onDrop }) => {
       isOver: !!monitor.isOver(),
     }),
   });
+
+  const [tasks, setTasks] = useState(taskCards || []);
+  const [showInputFields, setShowInputFields] = useState(false);
+
+  const addTask = async (newTask) => {
+    const createdTask = await createTask(newTask);
+    setTasks([...tasks, createdTask]);
+    setShowInputFields(false);
+  };
 
   return (
     <div
@@ -20,11 +30,15 @@ const TaskColumn = ({ title, color, showButton, taskCards, onDrop }) => {
     >
       
       {taskCards.map((card) => (
-        <TaskCard key={card.id} {...card} />
+        <TaskCard key={card.id} {...card} title={card.title} description={card.description} />
       ))}
 
+      {showInputFields && (
+          <CreateTask  createTask={addTask} />
+      )}
+
       {showButton && (
-        <button className="add-new-card">
+        <button className="add-new-card"  onClick={() => setShowInputFields(true)}>
           <div className="add-button"></div>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
             <path d="M12 8V16M16 12L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

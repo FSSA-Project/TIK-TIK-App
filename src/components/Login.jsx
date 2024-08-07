@@ -64,7 +64,9 @@ const LoginForm = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setTimeout(() => navigate('/dashboard'), 1000);
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('userId',data.data.id);
+        setTimeout(() => navigate('/dashboard'), 20);
       } else {
         setMessage(`Login failed: ${data.message}`);
       }
