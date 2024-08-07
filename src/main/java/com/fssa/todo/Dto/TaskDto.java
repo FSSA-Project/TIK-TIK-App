@@ -26,7 +26,7 @@ public class TaskDto {
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.createdAt = task.getCreatedAt();
-        this.statusId = task.getStatusId().getId();
+        this.statusId = task.getTaskStatusId().getId();
         if (task.getUser() != null) {
             this.userId = task.getUser().getId();
             this.user = new UserDto(task.getUser());

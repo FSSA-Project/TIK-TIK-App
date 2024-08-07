@@ -3,6 +3,7 @@ package com.fssa.todo.controller;
 
 import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.TaskDto;
+import com.fssa.todo.Dto.TaskStatusCountDTO;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +141,34 @@ public class TaskController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/task-counts")
+    public ResponseEntity<ApiResponse<TaskStatusCountDTO>> getTaskCountsByStatus(@RequestBody Map<String, Object> payload) {
+        try {
+            // Extract the userId from the payload map
+            Long userId = Long.parseLong(payload.get("userId").toString());
+
+            // Call the service to get the task counts by status
+            TaskStatusCountDTO taskStatusCountDTO = taskService.getTaskCountsByStatus(userId);
+
+            // Create a successful response
+            ApiResponse<TaskStatusCountDTO> response = new ApiResponse<>("Task count retrieved successfully", taskStatusCountDTO);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            // Handle invalid userId format
+            ApiResponse<TaskStatusCountDTO> response = new ApiResponse<>("Invalid user ID format", null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException ex) {
+            // Handle other runtime exceptions
+            ApiResponse<TaskStatusCountDTO> response = new ApiResponse<>("Task count retrieval failed", null);
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // Handle general exceptions
+            ApiResponse<TaskStatusCountDTO> response = new ApiResponse<>("An error occurred while retrieving task counts", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 
 }

@@ -2,6 +2,7 @@ package com.fssa.todo.service;
 
 
 import com.fssa.todo.Dto.TaskDto;
+import com.fssa.todo.Dto.TaskStatusCountDTO;
 import com.fssa.todo.dao.TaskDao;
 import com.fssa.todo.dao.TaskStatusDao;
 import com.fssa.todo.dao.UserDao;
@@ -46,7 +47,7 @@ public class TaskService {
         if (taskDto.getStatusId() != null && taskDto.getStatusId() > 0) {
             TaskStatus taskStatus = taskStatusDao.findById(taskDto.getStatusId())
                     .orElseThrow(() -> new RuntimeException("Task status not found"));
-            task.setStatusId(taskStatus);
+            task.setTaskStatusId(taskStatus);
         }
 
         // Set the user
@@ -66,7 +67,7 @@ public class TaskService {
         savedTaskDto.setId(savedTask.getId());
         savedTaskDto.setTitle(savedTask.getTitle());
         savedTaskDto.setDescription(savedTask.getDescription());
-        savedTaskDto.setStatusId(savedTask.getStatusId().getId());
+        savedTaskDto.setStatusId(savedTask.getTaskStatusId().getId());
         savedTaskDto.setDueDate(savedTask.getDueDate());
         savedTaskDto.setUserId(savedTask.getUser().getId());
         savedTaskDto.setCreatedAt(savedTask.getCreatedAt());
@@ -96,7 +97,7 @@ public class TaskService {
         if (taskDto.getStatusId() != null && taskDto.getStatusId() > 0) {
             TaskStatus taskStatus = taskStatusDao.findById(taskDto.getStatusId())
                     .orElseThrow(() -> new RuntimeException("Task status not found"));
-            existingTask.setStatusId(taskStatus);
+            existingTask.setTaskStatusId(taskStatus);
         }
 
         // Update the user if a valid user ID is provided
@@ -169,7 +170,7 @@ public class TaskService {
         TaskStatus taskStatus = taskStatusDao.findById(statusId).orElseThrow(() -> new RuntimeException("TaskStatus not found"));
 
         // Update the task's status
-        task.setStatusId(taskStatus);
+        task.setTaskStatusId(taskStatus);
 
         // Save the updated task
         Task updatedTask = taskDao.save(task);
@@ -179,4 +180,15 @@ public class TaskService {
     }
 
 
+    public TaskStatusCountDTO getTaskCountsByStatus(Long userId) {
+        if (userId == null || userId <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+
+        TaskStatusCountDTO taskStatusCountDTO = taskDao.getTaskCountsByStatus(userId);
+        if (taskStatusCountDTO != null) {
+            return taskStatusCountDTO;
+        }
+        throw new RuntimeException("No task data found for user ID");
+    }
 }

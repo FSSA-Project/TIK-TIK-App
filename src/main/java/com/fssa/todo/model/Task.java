@@ -26,7 +26,7 @@ public class Task {
     // Define many to one and this is enum
     @ManyToOne
     @JoinColumn(name = "task_status_id", referencedColumnName = "id")
-    private TaskStatus statusId;
+    private TaskStatus taskStatusId;
 
 
     @Column(name = "created_at")
