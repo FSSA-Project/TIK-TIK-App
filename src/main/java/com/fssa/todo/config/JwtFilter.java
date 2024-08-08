@@ -1,6 +1,7 @@
 package com.fssa.todo.config;
 
 import com.fssa.todo.jwtutil.jwtService;
+import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,26 +15,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
-
-
-import com.fssa.todo.jwtutil.jwtService;
-/**
- * This is for filter chain that is
- * maintain the bearer token check all
- * the apis for auth
- */
-
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
 
     @Autowired
     private jwtService jwtService;
 
     @Autowired
-    ApplicationContext context;
+    private JwtBlacklistService jwtBlacklistService;
+
+    @Autowired
+    private ApplicationContext context;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,11 +37,14 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String email = null;
 
-        // if auth header will be null or not code with bearer
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             email = jwtService.extractEmail(token);
 
+            if (jwtBlacklistService.isTokenBlacklisted(token)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is blacklisted");
+                return;
+            }
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -64,6 +62,5 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-
     }
 }

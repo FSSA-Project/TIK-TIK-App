@@ -5,13 +5,16 @@ import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.exception.UserRegistrationException;
 import com.fssa.todo.model.User;
+import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.fssa.todo.jwtutil.jwtService;
 
@@ -30,6 +33,9 @@ public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtBlacklistService jwtBlacklistService;
 
 
     /**
@@ -88,7 +94,6 @@ public class UserController {
 
                 String email = userDto.getEmail();
                 String password = userDto.getPassword();
-                System.out.println(email);
                 UserDto loggedInUser = userService.loginUser(email, password);
 
                 ApiResponse<UserDto> response = new ApiResponse<>("Login success", loggedInUser, token);
@@ -119,6 +124,30 @@ public class UserController {
         } catch (RuntimeException e) {
             ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(), null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /**
+     * Below the code for logout the user
+     * code
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        ApiResponse<String> response;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            jwtBlacklistService.blacklistToken(token);
+            SecurityContextHolder.clearContext();
+            response = new ApiResponse<>("Successfully logged out", null);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            response = new ApiResponse<>("Token is missing", null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
 

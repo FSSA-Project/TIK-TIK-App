@@ -5,10 +5,13 @@ import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.Dto.TaskStatusCountDTO;
 import com.fssa.todo.dao.UserDao;
+import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +26,6 @@ public class TaskController {
 
     @Autowired
     private UserDao userDao;
-
 
     /**
      * Code for create a new Task
@@ -186,6 +188,4 @@ public class TaskController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }
