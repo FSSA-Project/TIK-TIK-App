@@ -66,6 +66,10 @@ const Dashboard = () => {
   const inProgressTasks = tasks.filter(task => task.statusId === 2);
   const completedTasks = tasks.filter(task => task.statusId === 3);
 
+  const removeTask = (taskId) => {
+    setTasks(tasks.filter(task => task.id !== taskId));
+  };
+
   console.log("Dashboard: Rendering with tasks:", tasks);
 
   return (
@@ -124,6 +128,7 @@ const Dashboard = () => {
             showButton={true}
             taskCards={toStartTasks}
             onDrop={(taskId) => handleDrop(taskId, 1)} 
+            removeTask={removeTask} 
           />
           <TaskColumnInProgress
             title="In Progress"
@@ -131,6 +136,7 @@ const Dashboard = () => {
             showButton={false}
             taskCards={inProgressTasks}
             onDrop={(taskId) => handleDrop(taskId, 2)} 
+            removeTask={removeTask} 
           />
           <TaskColumnCompleted
             title="Completed"
@@ -138,6 +144,7 @@ const Dashboard = () => {
             showButton={false}
             taskCards={completedTasks}
             onDrop={(taskId) => handleDrop(taskId, 3)}
+            removeTask={removeTask} 
           />
         </div>
       </div>
