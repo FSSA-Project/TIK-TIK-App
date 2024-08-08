@@ -131,17 +131,6 @@ label{
 
 }
 
-button {
-  width: 74%;
-  padding: 0.75rem;
-  background-color:#202D48;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
 .separator {
   margin: 2.5rem 4.4em;
   border-top: 1px solid #0f0d0d;
@@ -236,3 +225,14 @@ button {
       transform: translateY(0);
   }
 }
+
+/* Loader while hitting api */
+.loader {
+  width: 30px;
+  aspect-ratio: 4;
+  background: radial-gradient(circle closest-side,#fff 90%,#0000) 0/calc(100%/3) 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation: l1 1s steps(4) infinite;
+  display: -webkit-inline-box;
+}
+@keyframes l1 {to{clip-path: inset(0 -34% 0 0)}}

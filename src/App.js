@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const App = () => {
   // const [data, setData] = useState(initialData);
@@ -73,13 +75,15 @@ const App = () => {
   // };
 
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <DndProvider backend={HTML5Backend}>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </Router>
+    </DndProvider>
   );
 };
 

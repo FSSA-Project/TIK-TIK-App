@@ -1,13 +1,27 @@
 .task-column {
-    background-color: #f2f6ff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 32%;
-    /* If there is an overflow of content
-    overflow: hidden;
-    overflow-y: scroll;
-    max-height: 609px; */
-  }
+  background-color: #f2f6ff !important;
+  padding: 20px;
+  border-radius: 8px;
+  width: 32%;
+    /* If there is an overflow of content */
+  overflow: hidden; 
+  overflow-y: auto; 
+  max-height: 552px;
+  min-height: 552px;
+  height: 552px;
+  /* position: relative; */
+}
+
+/* Applicable for Scroll-y axis display in taskcolumn 
+.task-column::-webkit-scrollbar {
+  display: visible;
+}
+
+.task-column {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+} */
+
   
   .task-column h2 {
     border-bottom: 2px solid;
@@ -19,8 +33,12 @@
     border: 2px dashed #ccc;
     border-radius: 8px;
     color:black;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
+    display: flex;
+    gap: 7px;
+    width: 100%;
+    align-items: flex-end;
   }
   
