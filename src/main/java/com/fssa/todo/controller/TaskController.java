@@ -5,9 +5,11 @@ import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.Dto.TaskStatusCountDTO;
 import com.fssa.todo.dao.UserDao;
+import com.fssa.todo.model.Task;
 import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.aspectj.weaver.patterns.HasMemberTypePatternForPerThisMatching;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -162,6 +164,14 @@ public class TaskController {
         }
     }
 
+
+    /**
+     * Below the code for task
+     * counts
+     *
+     * @param payload
+     * @return
+     */
     @PostMapping("/task-counts")
     public ResponseEntity<ApiResponse<TaskStatusCountDTO>> getTaskCountsByStatus(@RequestBody Map<String, Object> payload) {
         try {
@@ -187,5 +197,26 @@ public class TaskController {
             ApiResponse<TaskStatusCountDTO> response = new ApiResponse<>("An error occurred while retrieving task counts", null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    /**
+     * Below the code for search the api in
+     * Database
+     * @param request
+     * @return
+     */
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<TaskDto>>> searchTasks(@RequestParam String search) {
+        try {
+            List<TaskDto> tasks = taskService.searchTasks(search);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("Search Result", tasks);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (Exception e){
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("An error occured searching",null);
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

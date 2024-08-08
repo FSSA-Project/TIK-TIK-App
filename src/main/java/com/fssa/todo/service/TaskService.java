@@ -205,4 +205,32 @@ public class TaskService {
 
         return new TaskDto(task);
     }
+
+    /**
+     * Below the code for search in the DB
+     *
+     * @param request
+     * @return
+     */
+    public List<TaskDto> searchTasks(String query) {
+        List<Task> tasks = taskDao.searchByTitleOrDescription(query);
+        List<TaskDto> taskDtos = new ArrayList<>();
+        for (Task task : tasks) {
+            taskDtos.add(convertToDto(task));
+        }
+        return taskDtos;
+    }
+
+    private TaskDto convertToDto(Task task) {
+        // Convert Task entity to TaskDto
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
+        taskDto.setTitle(task.getTitle());
+        taskDto.setDescription(task.getDescription());
+        taskDto.setStatusId(task.getTaskStatusId().getId());
+        taskDto.setUserId(task.getUser().getId());
+        taskDto.setCreatedAt(task.getCreatedAt());
+        taskDto.setDueDate(task.getDueDate());
+        return taskDto;
+    }
 }
