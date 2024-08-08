@@ -41,12 +41,13 @@ const CreateTask = ({ onClose, onSave }) => {
       setTaskData({ title: '', description: '' });
       setMessage('Task created successfully');
 
-      onSave(createdTask);
+      // onSave(createdTask);
 
       setTimeout(() => {
         setMessage(null);
-        onClose();
+        // onClose();
       }, 1000);
+      window.location.reload();
     } catch (error) {
       console.error('Error:', error);
       setMessage(error.message);
