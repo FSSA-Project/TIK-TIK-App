@@ -5,22 +5,19 @@ import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.Dto.TaskStatusCountDTO;
 import com.fssa.todo.dao.UserDao;
-import com.fssa.todo.model.Task;
-import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.TaskService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.aspectj.weaver.patterns.HasMemberTypePatternForPerThisMatching;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/task")
+@Validated
 public class TaskController {
 
     @Autowired
@@ -36,7 +33,7 @@ public class TaskController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<TaskDto>> createTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<TaskDto>> createTask(@Valid @RequestBody TaskDto taskDto) {
         try {
             if (taskDto.getUserId() == null || !userDao.existsById(taskDto.getUserId())) {
                 return new ResponseEntity<>(new ApiResponse<>("UserId doesn't exist", null), HttpStatus.BAD_REQUEST);
@@ -76,12 +73,11 @@ public class TaskController {
     /**
      * Below the controller code for update the task by status by id
      *
-     * @param id
      * @param taskDto
      * @return
      */
     @PostMapping("/update/status")
-    public ResponseEntity<ApiResponse<TaskDto>> updateStatusById(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<TaskDto>> updateStatusById(@Valid @RequestBody TaskDto taskDto) {
         try {
             Long taskId = taskDto.getId();
             int statusId = taskDto.getStatusId();
@@ -106,7 +102,7 @@ public class TaskController {
      * @return
      */
     @PatchMapping("/update")
-    public ResponseEntity<ApiResponse<TaskDto>> updateTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<TaskDto>> updateTask(@Valid @RequestBody TaskDto taskDto) {
         try {
             TaskDto updatedTask = taskService.updateTask(taskDto.getId(), taskDto);
             ApiResponse<TaskDto> response = new ApiResponse<>("Task updated SuccessFully", updatedTask);
@@ -146,10 +142,10 @@ public class TaskController {
      * @return
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<ApiResponse<Long>> deleteTask(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<ApiResponse<Long>> deleteTask(@RequestBody Map<String, Long> payload) {
         try {
-            Long id = Long.parseLong(payload.get("id").toString()); // Extract the ID from the payload
-            taskService.deleteTask(id); // Call service to delete task
+            Long id = payload.get("id");
+            taskService.deleteTask(id);
             ApiResponse<Long> response = new ApiResponse<>("Task successfully deleted", id);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (NumberFormatException e) {
@@ -173,10 +169,10 @@ public class TaskController {
      * @return
      */
     @PostMapping("/task-counts")
-    public ResponseEntity<ApiResponse<TaskStatusCountDTO>> getTaskCountsByStatus(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<ApiResponse<TaskStatusCountDTO>> getTaskCountsByStatus(@RequestBody Map<String, Long> payload) {
         try {
             // Extract the userId from the payload map
-            Long userId = Long.parseLong(payload.get("userId").toString());
+            Long userId = payload.get("userId");
 
             // Call the service to get the task counts by status
             TaskStatusCountDTO taskStatusCountDTO = taskService.getTaskCountsByStatus(userId);

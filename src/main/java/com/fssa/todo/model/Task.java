@@ -2,13 +2,11 @@ package com.fssa.todo.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Entity
@@ -20,6 +18,8 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "title is mandatory")
     private String title;
     private String description;
 

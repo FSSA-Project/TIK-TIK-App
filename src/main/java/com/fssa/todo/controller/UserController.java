@@ -8,6 +8,7 @@ import com.fssa.todo.model.User;
 import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.fssa.todo.jwtutil.jwtService;
 
@@ -22,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/user")
+@Validated
 public class UserController {
 
 
@@ -56,7 +59,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserDto>> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<ApiResponse<UserDto>> createUser(@Valid @RequestBody UserDto userDto) {
         try {
             // Call service layer
             UserDto createdUserDto = userService.addUser(userDto);
@@ -83,7 +86,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserDto>> loginUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<ApiResponse<UserDto>> loginUser(@Valid @RequestBody UserDto userDto) {
         try {
             // This auth is check the password and username
             Authentication authentication = authenticationManager
@@ -116,7 +119,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/profile")
-    public ResponseEntity<ApiResponse<UserDto>> getUserProfile(@RequestBody UserDto userDto) {
+    public ResponseEntity<ApiResponse<UserDto>> getUserProfile(@Valid @RequestBody UserDto userDto) {
         try {
             UserDto responseDto = userService.getUserProfile(userDto.getEmail());
             ApiResponse<UserDto> response = new ApiResponse<>("Data Retrived Sucess", responseDto);

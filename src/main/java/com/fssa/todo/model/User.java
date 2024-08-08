@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.w3c.dom.stylesheets.LinkStyle;
 
@@ -21,12 +24,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name is mandatory")
+    @Size(min = 1, max = 30, message = "Username must be between 4 to 30 Characters")
     @Column(name = "name", unique = true)
     private String name;
 
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "email is mandatory")
     @Column(name = "email", unique = true)
     private String email;
 
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, max = 12, message = "Password must be at least 8 characters")
     @Column(name = "password")
     @JsonIgnore
     private String password;

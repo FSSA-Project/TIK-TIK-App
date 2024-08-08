@@ -20,7 +20,6 @@
     }
 ]
 ```
-
 **Status Codes**:
 - 200 OK: Successfully retrieved users.
 
