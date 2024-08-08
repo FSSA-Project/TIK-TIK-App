@@ -125,6 +125,7 @@ const Dashboard = () => {
           <TaskColumnToStart
             title="To Start"
             color="blue"
+            id="1"
             showButton={true}
             taskCards={toStartTasks}
             onDrop={(taskId) => handleDrop(taskId, 1)} 
@@ -133,6 +134,7 @@ const Dashboard = () => {
           <TaskColumnInProgress
             title="In Progress"
             color="yellow"
+            id="2"
             showButton={false}
             taskCards={inProgressTasks}
             onDrop={(taskId) => handleDrop(taskId, 2)} 
@@ -141,6 +143,7 @@ const Dashboard = () => {
           <TaskColumnCompleted
             title="Completed"
             color="green"
+            id="3"
             showButton={false}
             taskCards={completedTasks}
             onDrop={(taskId) => handleDrop(taskId, 3)}

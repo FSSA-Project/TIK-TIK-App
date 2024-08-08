@@ -4,10 +4,10 @@ import TaskCard from '../components/Taskcard.jsx';
 import { useDrop } from 'react-dnd';
 import CreateTask from './CreateTask.jsx';
 
-const TaskColumn = ({ title, color, showButton, taskCards, onDrop, createTask, removeTask }) => {
+const TaskColumn = ({ title, color, showButton, taskCards, onDrop, statusId, createTask, removeTask }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'task',
-    drop: (item) => onDrop(item.taskId),
+    drop: (item) => onDrop(item.taskId, statusId),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),

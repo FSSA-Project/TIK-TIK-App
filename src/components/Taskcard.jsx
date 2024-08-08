@@ -65,6 +65,7 @@ const TaskCard = ({ id, title, description, createdAt }) => {
     if (response.ok) {
       setIsEditing(false);
       setShowOptions(false);
+      window.location.reload();
     } else {
       console.error('Failed to update task');
     }
@@ -84,6 +85,7 @@ const TaskCard = ({ id, title, description, createdAt }) => {
 
       if (response.ok) {
         removeTask(id);
+        window.location.reload();
       } else {
         console.error('Failed to delete the task');
       }
