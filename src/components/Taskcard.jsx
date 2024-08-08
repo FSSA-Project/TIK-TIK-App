@@ -3,7 +3,7 @@ import '../styles/Taskcard.css';
 import { useDrag } from 'react-dnd';
 import useSessionStorage from './Auth';
 
-const TaskCard = ({ id, title, description, date }) => {
+const TaskCard = ({ id, title, description, createdAt }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const optionsMenuRef = useRef(null);
@@ -100,10 +100,10 @@ const TaskCard = ({ id, title, description, date }) => {
     id={id}
     >
       <div className="task-content">
-        <h3 title={title} >{title}</h3>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6" onClick={handleOptionsClick}>
+      {!isEditing && <h3 title={title}>{title}</h3>}
+        {!isEditing && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6" onClick={handleOptionsClick}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
-        </svg>
+        </svg> }
         {showOptions && (
           <div className="options-menu" ref={optionsMenuRef}>
             <div className='options-menu-task'>
@@ -126,10 +126,10 @@ const TaskCard = ({ id, title, description, date }) => {
           </span>
         )}
       </p>
-      <span className="task-date">{date}</span>
+      <span className="task-date">{createdAt}</span>
       </>
     ) : (
-      <div className="edit-form">
+      <div className="update-task-container">
           <input
             type="text"
             value={editTitle}
@@ -141,8 +141,10 @@ const TaskCard = ({ id, title, description, date }) => {
             onChange={(e) => setEditDescription(e.target.value)}
             placeholder="Description"
           ></textarea>
+          <div className="button-group">
           <button className="save-button" onClick={handleSaveEdit}>Update</button>
           <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
+          </div>
       </div>
     )}
     </div>

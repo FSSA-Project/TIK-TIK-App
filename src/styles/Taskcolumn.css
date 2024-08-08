@@ -39,5 +39,6 @@
     display: flex;
     gap: 7px;
     width: 100%;
+    align-items: flex-end;
   }
   
