@@ -8,9 +8,14 @@ const TaskCard = ({ id, title, description, date }) => {
   const [showFullDesc, setShowFullDesc] = useState(false);
   const optionsMenuRef = useRef(null);
   const [token] = useSessionStorage('token');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(title);
+  const [editDescription, setEditDescription] = useState(description);
   
   const handleOptionsClick = () => setShowOptions(!showOptions);
   const handleToggleDesc = () => setShowFullDesc(!showFullDesc);
+  const handleEditClick = () => setIsEditing(true);
+  const handleCancelEdit = () => setIsEditing(false);
 
   const handleClickOutside = (event) => {
     if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
@@ -40,7 +45,32 @@ const TaskCard = ({ id, title, description, date }) => {
     }
     return description || '';
   };
-  
+
+  // Edit and updating the task
+  const handleSaveEdit = async () => {
+    const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/update', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id,
+        title: editTitle,
+        description: editDescription,
+        statusId:1
+      }),
+    });
+
+    if (response.ok) {
+      setIsEditing(false);
+      setShowOptions(false);
+    } else {
+      console.error('Failed to update task');
+    }
+  };
+
+  // Delete task
   const deleteTask = async (removeTask) => {
     try {
       const response = await fetch(`https://todo-app-wpbz.onrender.com/api/v1/task/delete`, {
@@ -67,6 +97,7 @@ const TaskCard = ({ id, title, description, date }) => {
     ref={drag}
     className="task-card"
     style={{ opacity: isDragging ? 0.5 : 1 }}
+    id={id}
     >
       <div className="task-content">
         <h3 title={title} >{title}</h3>
@@ -76,12 +107,14 @@ const TaskCard = ({ id, title, description, date }) => {
         {showOptions && (
           <div className="options-menu" ref={optionsMenuRef}>
             <div className='options-menu-task'>
-            <button className="option-button">Edit</button>
+            <button className="option-button" onClick={handleEditClick} >Edit</button>
             <button className="option-button" onClick={deleteTask}>Delete</button>
-              </div>
+          </div>
           </div>
         )}
       </div>
+        {!isEditing ? (
+          <>
       <p title={description}>
         {showFullDesc ? description : truncateDescription(description)}
         {description.length > 120 && (
@@ -94,6 +127,24 @@ const TaskCard = ({ id, title, description, date }) => {
         )}
       </p>
       <span className="task-date">{date}</span>
+      </>
+    ) : (
+      <div className="edit-form">
+          <input
+            type="text"
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+            placeholder="Title"
+          />
+          <textarea
+            value={editDescription}
+            onChange={(e) => setEditDescription(e.target.value)}
+            placeholder="Description"
+          ></textarea>
+          <button className="save-button" onClick={handleSaveEdit}>Update</button>
+          <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
+      </div>
+    )}
     </div>
   );
 };
