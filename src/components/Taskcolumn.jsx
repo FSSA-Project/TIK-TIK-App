@@ -4,7 +4,7 @@ import TaskCard from '../components/Taskcard.jsx';
 import { useDrop } from 'react-dnd';
 import CreateTask from './CreateTask.jsx';
 
-const TaskColumn = ({ title, color, showButton, taskCards, onDrop, statusId, createTask, removeTask }) => {
+const TaskColumn = ({ title, color, showButton, taskCards, onDrop, statusId, createTask, removeTask, dataUpdate }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'task',
     drop: (item) => onDrop(item.taskId, statusId),
@@ -15,6 +15,10 @@ const TaskColumn = ({ title, color, showButton, taskCards, onDrop, statusId, cre
 
   const [tasks, setTasks] = useState(taskCards || []);
   const [showInputFields, setShowInputFields] = useState(false);
+
+  const handleCloseModal = () => {
+    setShowInputFields(false);
+  }
 
   const addTask = async (newTask) => {
     const createdTask = await createTask(newTask);
@@ -30,15 +34,15 @@ const TaskColumn = ({ title, color, showButton, taskCards, onDrop, statusId, cre
     >
       
       {taskCards.map((card) => (
-        <TaskCard key={card.id} {...card} title={card.title} description={card.description} removeTask={removeTask} />
+        <TaskCard key={card.id} {...card} title={card.title} description={card.description} removeTask={removeTask} dataUpdate={dataUpdate}/>
       ))}
 
       {showInputFields && (
-          <CreateTask  createTask={addTask} />
+          <CreateTask  createTask={addTask} onClose={handleCloseModal}/>
       )}
 
       {showButton && (
-        <button className="add-new-card"  onClick={() => setShowInputFields(true)}>
+        <button className="add-new-card"  onClick={() => !showInputFields && setShowInputFields(true)} disabled={showInputFields}>
           <div className="add-button"></div>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
             <path d="M12 8V16M16 12L8 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
