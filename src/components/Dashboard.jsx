@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [isDataUpdated, setIsDataUpdated] = useState(false);
 
   const callBackFuncForDataUpdate = () => {
-      setIsDataUpdated(true);
+    setIsDataUpdated((prev) => !prev); 
   }
 
   useEffect(() => {
