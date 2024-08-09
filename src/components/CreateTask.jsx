@@ -45,7 +45,7 @@ const CreateTask = ({ onClose, onSave }) => {
 
       setTimeout(() => {
         setMessage(null);
-        // onClose();
+        onClose();
       }, 1000);
       window.location.reload();
     } catch (error) {
@@ -83,11 +83,11 @@ const CreateTask = ({ onClose, onSave }) => {
           onChange={handleInputChange}
         />
         <div className="button-group">
-          <button onClick={handleAddTask}>Add Task</button>
-          <button onClick={handleCancelTask}>Cancel</button>
+          <button className='save-button' onClick={handleAddTask}>Add Task</button>
+          <button className='cancel-button' onClick={handleCancelTask}>Cancel</button>
         </div>
       </div>
-      {message && <p className="message">{message}</p>}
+      {message && <p className="error-message">{message}</p>}
     </div>
   );
 };

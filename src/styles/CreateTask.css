@@ -4,31 +4,42 @@
     border-radius: 8px;
     padding: 18px;
     margin-bottom: 17px;
-    transition: background-color 0.2s
+    transition: background-color 0.2s;
   }
   
-  .create-task-container, .update-task-container input,
-  .create-task-container, .update-task-container textarea {
+  .create-task-container input,
+  .create-task-container textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 8px;
-    border: 1px solid #e5e7eb;
+    border: 2px solid #C4D0EB;
     border-radius: 4px;
     font-size: 14px;
     box-sizing: border-box;
   }
   
-  .create-task-container, .update-task-container textarea {
+  .create-task-container textarea {
     resize: none;
+  }
+
+  .create-task-container input:focus,
+  .create-task-container textarea:focus,
+  .update-task-container input:focus,
+  .update-task-container textarea:focus {
+    outline: none;
   }
 
   .button-group{
     display: flex;
     flex-direction: row;
     gap: 12px;
+    .cancel-button {
+      color: black;
+      background-color: #DDE8FF;
+    }
   }
   
-  .create-task-container, .update-task-container button {
+  .create-task-container button {
     width: 100%;
     padding: 10px;
     background-color: #1f2937; 
@@ -40,7 +51,38 @@
     transition: background-color 0.3s ease;
   }
   
-  .create-task-container, .update-task-container button:hover {
+  /* .create-task-container button:hover {
     background-color: #111827; 
-  }
+  } */
   
+  .update-task-container input,
+  .update-task-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 2px solid #C4D0EB;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .update-task-container textarea {
+    resize: none;
+  }
+
+  .update-task-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1f2937; 
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .error-message {
+    color: #1f2937;
+    margin: 5px 0px 0px 0px;
+  }
