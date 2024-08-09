@@ -10,6 +10,11 @@ const Dashboard = () => {
   const [inputTypeDate, setInputTypeDate] = useState('text');
   const [token] = useSessionStorage('token');
   const [id] = useSessionStorage('userId');
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
+
+  const callBackFuncForDataUpdate = () => {
+    setIsDataUpdated((prev) => !prev); 
+  }
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -31,17 +36,19 @@ const Dashboard = () => {
         const result = await response.json();
         console.log('fetchTasks: Fetched tasks data:', result);
     
-        // Extract the `data` property from the result and ensure it's an array
+        console.log("Extract the `data` property from the result and ensure it's an array");
         if (Array.isArray(result.data)) {
           setTasks(result.data);
           console.log('fetchTasks: Tasks set successfully:', result.data);
         } else {
           console.error('fetchTasks: Unexpected data format:', result);
-          setTasks([]); // Set an empty array if the format is unexpected
+          setTasks([]);
+          console.log("Set an empty array if the format is unexpected");
         }
       } catch (error) {
         console.error('fetchTasks: Error fetching tasks:', error);
-        setTasks([]); // Set an empty array in case of an error
+        setTasks([]);
+        console.log("Set an empty array in case of an error");
       }
     };
 
@@ -51,16 +58,38 @@ const Dashboard = () => {
     } else {
       console.log("useEffect: No token found.");
     }
-  }, [token, id]);
+  }, [token, id, isDataUpdated]);
 
-  const handleDrop = (taskId, newStatus) => {
+  const handleDrop = async (taskId, newStatus) => {
     console.log(`handleDrop: Changing status of task ${taskId} to ${newStatus}`);
+    console.log("Update the status of the task locally");
     setTasks(prevTasks =>
       prevTasks.map(task =>
-        task.id === taskId ? { ...task, status: newStatus } : task
+        task.id === taskId ? { ...task, statusId: newStatus } : task
       )
     );
+  
+    console.log("Call the API to save the changes");
+    const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/update/status', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id: taskId,
+        statusId: newStatus,
+      }),
+    });
+  
+    console.log("Handle the response from the server");
+    if (response.ok) {
+      console.log(`Task ${taskId} status updated successfully.`);
+    } else {
+      console.error(`Failed to update task ${taskId} status.`);
+    }
   };
+  
   console.log("After function", tasks)
   const toStartTasks = tasks.filter(task => task.statusId === 1);
   const inProgressTasks = tasks.filter(task => task.statusId === 2);
@@ -130,6 +159,7 @@ const Dashboard = () => {
             taskCards={toStartTasks}
             onDrop={(taskId) => handleDrop(taskId, 1)} 
             removeTask={removeTask} 
+            dataUpdate={callBackFuncForDataUpdate}
           />
           <TaskColumnInProgress
             title="In Progress"
@@ -139,6 +169,7 @@ const Dashboard = () => {
             taskCards={inProgressTasks}
             onDrop={(taskId) => handleDrop(taskId, 2)} 
             removeTask={removeTask} 
+            dataUpdate={callBackFuncForDataUpdate}
           />
           <TaskColumnCompleted
             title="Completed"
@@ -148,6 +179,7 @@ const Dashboard = () => {
             taskCards={completedTasks}
             onDrop={(taskId) => handleDrop(taskId, 3)}
             removeTask={removeTask} 
+            dataUpdate={callBackFuncForDataUpdate}
           />
         </div>
       </div>

@@ -3,7 +3,7 @@ import '../styles/Taskcard.css';
 import { useDrag } from 'react-dnd';
 import useSessionStorage from './Auth';
 
-const TaskCard = ({ id, title, description, createdAt }) => {
+const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const optionsMenuRef = useRef(null);
@@ -11,10 +11,14 @@ const TaskCard = ({ id, title, description, createdAt }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
+  const [loading, setLoading] = useState(false);
   
   const handleOptionsClick = () => setShowOptions(!showOptions);
   const handleToggleDesc = () => setShowFullDesc(!showFullDesc);
-  const handleEditClick = () => setIsEditing(true);
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setShowOptions(false);
+  }
   const handleCancelEdit = () => setIsEditing(false);
 
   const handleClickOutside = (event) => {
@@ -48,6 +52,8 @@ const TaskCard = ({ id, title, description, createdAt }) => {
 
   // Edit and updating the task
   const handleSaveEdit = async () => {
+    setLoading(true);
+    try {
     const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/update', {
       method: 'PATCH',
       headers: {
@@ -58,16 +64,21 @@ const TaskCard = ({ id, title, description, createdAt }) => {
         id,
         title: editTitle,
         description: editDescription,
-        statusId:1
+        statusId: statusId,
       }),
     });
 
     if (response.ok) {
       setIsEditing(false);
       setShowOptions(false);
-      window.location.reload();
+      dataUpdate();
     } else {
       console.error('Failed to update task');
+    }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +96,8 @@ const TaskCard = ({ id, title, description, createdAt }) => {
 
       if (response.ok) {
         removeTask(id);
-        window.location.reload();
+        setShowOptions(false);
+        dataUpdate();
       } else {
         console.error('Failed to delete the task');
       }
@@ -144,7 +156,7 @@ const TaskCard = ({ id, title, description, createdAt }) => {
             placeholder="Description"
           ></textarea>
           <div className="button-group">
-          <button className="save-button" onClick={handleSaveEdit}>Update</button>
+          <button className="save-button" onClick={handleSaveEdit} disabled={loading}>{loading ? <div class="loader"></div> : 'Update' }</button>
           <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
           </div>
       </div>

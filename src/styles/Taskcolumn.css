@@ -41,4 +41,9 @@
     width: 100%;
     align-items: flex-end;
   }
-  
+
+  .add-new-card:disabled {
+    cursor: not-allowed; 
+    opacity: 0.6; 
+    border: 1px solid #ccc; 
+  }

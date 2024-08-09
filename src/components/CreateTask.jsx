@@ -3,9 +3,10 @@ import '../styles/CreateTask.css';
 
 const useSessionStorage = (key) => sessionStorage.getItem(key);
 
-const CreateTask = ({ onClose, onSave }) => {
+const CreateTask = ({ onClose, onSave, dataUpdate }) => {
   const [taskData, setTaskData] = useState({ title: '', description: '' });
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const token = useSessionStorage('token');
   const userId = useSessionStorage('userId');
@@ -22,6 +23,7 @@ const CreateTask = ({ onClose, onSave }) => {
       userId: userId,
     };
     console.log(token);
+    setLoading(true);
     try {
       const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/create', {
         method: 'POST',
@@ -46,11 +48,14 @@ const CreateTask = ({ onClose, onSave }) => {
       setTimeout(() => {
         setMessage(null);
         // onClose();
+        dataUpdate();
       }, 1000);
       window.location.reload();
     } catch (error) {
       console.error('Error:', error);
       setMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +63,7 @@ const CreateTask = ({ onClose, onSave }) => {
     const confirmCancel = window.confirm("Are you sure you want to discard your current task creation?");
     if (confirmCancel) {
       setTaskData({ title: '', description: '' });
-      setMessage('Task creation cancelled');
+      setMessage('Task creation cancelled.');
       setTimeout(() => {
         setMessage(null);
         onClose();
@@ -83,11 +88,11 @@ const CreateTask = ({ onClose, onSave }) => {
           onChange={handleInputChange}
         />
         <div className="button-group">
-          <button onClick={handleAddTask}>Add Task</button>
-          <button onClick={handleCancelTask}>Cancel</button>
+          <button className='save-button' onClick={handleAddTask} disabled={loading}>{loading ? <div class="loader"></div> : 'Add Task' }</button>
+          <button className='cancel-button' onClick={handleCancelTask}>Cancel</button>
         </div>
       </div>
-      {message && <p className="message">{message}</p>}
+      {message && <p className="error-message">{message}</p>}
     </div>
   );
 };
