@@ -3,7 +3,7 @@ import '../styles/Taskcard.css';
 import { useDrag } from 'react-dnd';
 import useSessionStorage from './Auth';
 
-const TaskCard = ({ id, title, description, createdAt }) => {
+const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const optionsMenuRef = useRef(null);
@@ -14,7 +14,10 @@ const TaskCard = ({ id, title, description, createdAt }) => {
   
   const handleOptionsClick = () => setShowOptions(!showOptions);
   const handleToggleDesc = () => setShowFullDesc(!showFullDesc);
-  const handleEditClick = () => setIsEditing(true);
+  const handleEditClick = () => {
+    setIsEditing(true);
+    setShowOptions(false);
+  }
   const handleCancelEdit = () => setIsEditing(false);
 
   const handleClickOutside = (event) => {
@@ -58,14 +61,14 @@ const TaskCard = ({ id, title, description, createdAt }) => {
         id,
         title: editTitle,
         description: editDescription,
-        statusId:1
+        statusId: statusId,
       }),
     });
 
     if (response.ok) {
       setIsEditing(false);
       setShowOptions(false);
-      window.location.reload();
+      dataUpdate();
     } else {
       console.error('Failed to update task');
     }
@@ -85,7 +88,8 @@ const TaskCard = ({ id, title, description, createdAt }) => {
 
       if (response.ok) {
         removeTask(id);
-        window.location.reload();
+        setShowOptions(false);
+        dataUpdate();
       } else {
         console.error('Failed to delete the task');
       }
