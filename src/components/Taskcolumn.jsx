@@ -38,7 +38,7 @@ const TaskColumn = ({ title, color, showButton, taskCards, onDrop, statusId, cre
       ))}
 
       {showInputFields && (
-          <CreateTask  createTask={addTask} onClose={handleCloseModal}/>
+          <CreateTask  createTask={addTask} onClose={handleCloseModal} removeTask={dataUpdate}/>
       )}
 
       {showButton && (

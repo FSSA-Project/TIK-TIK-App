@@ -11,6 +11,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
+  const [loading, setLoading] = useState(false);
   
   const handleOptionsClick = () => setShowOptions(!showOptions);
   const handleToggleDesc = () => setShowFullDesc(!showFullDesc);
@@ -51,6 +52,8 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
 
   // Edit and updating the task
   const handleSaveEdit = async () => {
+    setLoading(true);
+    try {
     const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/update', {
       method: 'PATCH',
       headers: {
@@ -71,6 +74,11 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
       dataUpdate();
     } else {
       console.error('Failed to update task');
+    }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -148,7 +156,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
             placeholder="Description"
           ></textarea>
           <div className="button-group">
-          <button className="save-button" onClick={handleSaveEdit}>Update</button>
+          <button className="save-button" onClick={handleSaveEdit} disabled={loading}>{loading ? <div class="loader"></div> : 'Update' }</button>
           <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
           </div>
       </div>
