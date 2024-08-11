@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tasks")
 public class Task {
 
@@ -41,4 +41,5 @@ public class Task {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     // it user_id refers the search the id by tasks table
     private User user;
+
 }
