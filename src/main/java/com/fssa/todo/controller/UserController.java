@@ -4,6 +4,7 @@ package com.fssa.todo.controller;
 import com.fssa.todo.ApiReponse.ApiResponse;
 import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.exception.UserRegistrationException;
+import com.fssa.todo.jwtutil.jwtService;
 import com.fssa.todo.model.User;
 import com.fssa.todo.service.JwtBlacklistService;
 import com.fssa.todo.service.UserService;
@@ -18,9 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.fssa.todo.jwtutil.jwtService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private JwtBlacklistService jwtBlacklistService;
+
+    // To return the empty string in response
+    String[] emptyArray = new String[]{};
 
 
     /**
@@ -59,21 +63,19 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserDto>> createUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<ApiResponse<?>> createUser(@Valid @RequestBody UserDto userDto) {
         try {
             // Call service layer
             UserDto createdUserDto = userService.addUser(userDto);
 
-            // Build success response
             ApiResponse<UserDto> response = new ApiResponse<>("Registered successfully", createdUserDto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+
         } catch (UserRegistrationException e) {
-            // Build error response with specific message
-            ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<?> response = new ApiResponse<>(e.getMessage(), emptyArray);
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (Exception e) {
-            // Handle other exceptions
-            ApiResponse<UserDto> response = new ApiResponse<>("An error occurred", null);
+            ApiResponse<?> response = new ApiResponse<>(e.getMessage(), emptyArray);
             return new ResponseEntity<>(response, HttpStatus.BAD_GATEWAY);
         }
     }
@@ -86,27 +88,29 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserDto>> loginUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<ApiResponse<?>> loginUser(@RequestBody Map<String, String> payload) {
         try {
+            // getting from the payload
+            String email = payload.get("email");
+            String passWord = payload.get("password");
+
             // This auth is check the password and username
             Authentication authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(email, passWord));
 
             if (authentication.isAuthenticated()) {
-                String token = jwtService.generateToken(userDto.getEmail());
+                String token = jwtService.generateToken(email);
 
-                String email = userDto.getEmail();
-                String password = userDto.getPassword();
-                UserDto loggedInUser = userService.loginUser(email, password);
+                UserDto loggedInUser = userService.loginUser(email, passWord);
 
-                ApiResponse<UserDto> response = new ApiResponse<>("Login success", loggedInUser, token);
+                ApiResponse<?> response = new ApiResponse<>("Login success", loggedInUser, token);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
-                ApiResponse<UserDto> response = new ApiResponse<>("Authentication failed", null);
+                ApiResponse<?> response = new ApiResponse<>("Authentication failed", emptyArray);
                 return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
             }
         } catch (RuntimeException e) {
-            ApiResponse<UserDto> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<?> response = new ApiResponse<>(e.getMessage(), emptyArray);
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }

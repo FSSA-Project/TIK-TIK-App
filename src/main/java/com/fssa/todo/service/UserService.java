@@ -1,7 +1,6 @@
 package com.fssa.todo.service;
 
 
-import com.fssa.todo.Dto.TaskDto;
 import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.exception.UserRegistrationException;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +20,7 @@ public class UserService {
 
     @Autowired
     private UserDao userDao;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); // set the strength as 12 rounds
 
     /**
@@ -43,13 +44,8 @@ public class UserService {
      * @Return String
      */
     public UserDto addUser(UserDto userDto) {
-        // Check if a user with the same username or email already exists
-        User existingUser = userDao.findByName(userDto.getName());
-        if (existingUser != null) {
-            throw new UserRegistrationException("Username already exists");
-        }
 
-        existingUser = userDao.findByEmail(userDto.getEmail());
+        User existingUser = userDao.findByEmail(userDto.getEmail());
         if (existingUser != null) {
             throw new UserRegistrationException("Email already exists");
         }
@@ -80,7 +76,7 @@ public class UserService {
     public UserDto loginUser(String email, String password) {
 
         User user = userDao.findByEmail(email);
-        if (user != null && encoder.matches(password, user.getPassword())) { // Check the password matchs
+        if (user != null && encoder.matches(password, user.getPassword())) { // Check the password matches
             // Create a new UserDto
             UserDto responseDto = new UserDto();
             responseDto.setId(user.getId());

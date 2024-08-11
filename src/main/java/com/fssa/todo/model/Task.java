@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Data
@@ -21,6 +22,8 @@ public class Task {
 
     @NotBlank(message = "title is mandatory")
     private String title;
+
+    @NotBlank(message = "description is mandatory")
     private String description;
 
     // Define many to one and this is enum
@@ -33,8 +36,9 @@ public class Task {
     private LocalDate createdAt;
     private LocalDate dueDate;
 
-    @ManyToOne // many task will user create but one single id unique
+    @ManyToOne // A one User can create a multiple task so that Many to one
     @JsonManagedReference // This act as the parent
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id") // it user_id refers the search the id by tasks table
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
+    // it user_id refers the search the id by tasks table
     private User user;
 }

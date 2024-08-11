@@ -44,10 +44,10 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
 
-        // This will interact with the database spring inbuild security
+        // This will interact with the database spring inbuilt security
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
-        provider.setUserDetailsService(userDetailsService); // Set the userdetails like an object
+        provider.setUserDetailsService(userDetailsService); // Set the user details like an object
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12)); // set the rounds as 12
 
         return provider;

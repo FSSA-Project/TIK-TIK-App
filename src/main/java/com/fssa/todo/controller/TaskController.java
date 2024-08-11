@@ -10,14 +10,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/task")
-@Validated
 public class TaskController {
 
     @Autowired
@@ -35,9 +35,11 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<TaskDto>> createTask(@Valid @RequestBody TaskDto taskDto) {
         try {
-            if (taskDto.getUserId() == null || !userDao.existsById(taskDto.getUserId())) {
-                return new ResponseEntity<>(new ApiResponse<>("UserId doesn't exist", null), HttpStatus.BAD_REQUEST);
-            }
+//            // Check the User there are not in DB
+//            if (taskDto.g() == null || !userDao.existsById(taskDto.getUserId())) {
+//                return new ResponseEntity<>(new ApiResponse<>("UserId doesn't exist", null), HttpStatus.BAD_REQUEST);
+//            }
+
             // Proceed with task creation
             TaskDto createdTask = taskService.createTask(taskDto);
             ApiResponse<TaskDto> response = new ApiResponse<>("Task successfully created", createdTask);
@@ -62,10 +64,10 @@ public class TaskController {
             ApiResponse<List<TaskDto>> response = new ApiResponse<>("Data Retrieved Successfully", tasks);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
-            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -76,18 +78,24 @@ public class TaskController {
      * @param taskDto
      * @return
      */
-    @PostMapping("/update/status")
-    public ResponseEntity<ApiResponse<TaskDto>> updateStatusById(@Valid @RequestBody TaskDto taskDto) {
+    @PutMapping("/update/status")
+    public ResponseEntity<ApiResponse<TaskDto>> updateStatusById(@Valid @RequestBody Map<String, Long> payload) {
         try {
-            Long taskId = taskDto.getId();
-            int statusId = taskDto.getStatusId();
+            Long taskId = payload.get("id");
+            int statusId = Math.toIntExact((payload.get("statusId")));
 
             TaskDto updateStatusById = taskService.updateStatusById(taskId, statusId);
             ApiResponse<TaskDto> response = new ApiResponse<>("Data Updated SuccessFully", updateStatusById);
             return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (IllegalArgumentException e) {
+            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
         } catch (RuntimeException e) {
             ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
         } catch (Exception e) {
             ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -99,39 +107,45 @@ public class TaskController {
      * Code for update the task
      *
      * @param taskDto
-     * @return
+     * @return the List of Task
      */
     @PatchMapping("/update")
-    public ResponseEntity<ApiResponse<TaskDto>> updateTask(@Valid @RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<List<TaskDto>>> updateTask(@Valid @RequestBody TaskDto taskDto) {
         try {
             TaskDto updatedTask = taskService.updateTask(taskDto.getId(), taskDto);
-            ApiResponse<TaskDto> response = new ApiResponse<>("Task updated SuccessFully", updatedTask);
+            List<TaskDto> taskList = updatedTask != null ? List.of(updatedTask) : new ArrayList<>();
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("Task updated SuccessFully", taskList);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
-            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Below the code for Get the task by task id
+     *
+     * @param taskDto is parameter that set the task model
+     * @return the task that particular get by Task id
+     */
 
     @PostMapping("/id")
-    public ResponseEntity<ApiResponse<TaskDto>> getTaskById(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<List<TaskDto>>> getTaskById(@RequestBody TaskDto taskDto) {
         try {
             TaskDto dto = taskService.getTaskById(taskDto.getId());
-            ApiResponse<TaskDto> response = new ApiResponse<>("Task updated SuccessFully", dto);
+            List<TaskDto> taskList = dto != null ? List.of(dto) : new ArrayList<>();
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("Task retrieved successfully", taskList);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
-            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            ApiResponse<TaskDto> response = new ApiResponse<>(e.getMessage(), null);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
 
@@ -169,7 +183,8 @@ public class TaskController {
      * @return
      */
     @PostMapping("/task-counts")
-    public ResponseEntity<ApiResponse<TaskStatusCountDTO>> getTaskCountsByStatus(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<ApiResponse<TaskStatusCountDTO>> getTaskCountsByStatus
+    (@RequestBody Map<String, Long> payload) {
         try {
             // Extract the userId from the payload map
             Long userId = payload.get("userId");
@@ -199,6 +214,7 @@ public class TaskController {
     /**
      * Below the code for search the api in
      * Database
+     *
      * @param search
      * @return
      */
@@ -208,10 +224,9 @@ public class TaskController {
             List<TaskDto> tasks = taskService.searchTasks(search);
             ApiResponse<List<TaskDto>> response = new ApiResponse<>("Search Result", tasks);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        catch (Exception e){
-            ApiResponse<List<TaskDto>> response = new ApiResponse<>("An error occured searching",null);
-            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("An error occured searching", null);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

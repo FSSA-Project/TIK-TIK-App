@@ -3,13 +3,12 @@ package com.fssa.todo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.Date;
 import java.util.List;
@@ -24,9 +23,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is mandatory")
-    @Size(min = 1, max = 30, message = "Username must be between 4 to 30 Characters")
-    @Column(name = "name", unique = true)
+    @NotBlank(message = "name is mandatory")
+    @Size(min = 6, max = 30, message = "Name must be minimum 7 characters to 30")
+    @Column(name = "name")
     private String name;
 
     @Email(message = "Email should be valid")
@@ -34,8 +33,11 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
+
     @NotBlank(message = "Password is mandatory")
-    @Size(min = 8, max = 12, message = "Password must be at least 8 characters")
+    @NotNull(message = "Password is mandatory")
+//    @Size(min = 6, max = 12, message = "Password must be 6-12 Characters")
+//    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,12}$", message = "Password must be 6-12 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character")
     @Column(name = "password")
     @JsonIgnore
     private String password;

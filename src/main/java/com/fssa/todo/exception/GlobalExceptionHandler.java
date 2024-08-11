@@ -40,10 +40,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ApiResponse<String>> handleAllExceptions(Exception ex) {
-        ApiResponse<String> response = new ApiResponse<>("An Unexcepted error occurred", ex.getMessage());
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleAllExceptions(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        ApiResponse<Map<String, String>> response = new ApiResponse<>("An unexpected error occurred", error, null);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
 
 }

@@ -25,10 +25,9 @@ public class MyUserDetailsService implements UserDetailsService  {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userDao.findByEmail(email); // Intract with the DB and search the name
+        User user = userDao.findByEmail(email); // Interact with the DB and search the name
 
         if(user == null){
-            System.out.println("Token is Expired");
             throw  new UsernameNotFoundException("User not found");
         }
         return new UserPrincipal(user);

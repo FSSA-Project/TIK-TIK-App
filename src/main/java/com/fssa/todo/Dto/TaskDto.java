@@ -1,12 +1,13 @@
 package com.fssa.todo.Dto;
 
-import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.model.Task;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -14,24 +15,31 @@ import java.util.Optional;
 public class TaskDto {
 
     private Long id;
+
+    @NotBlank(message = "Title is mandatory")
     private String title;
+
+    @NotBlank(message = "Description is Mandatory")
     private String description;
+
     private LocalDate createdAt;
     private LocalDate dueDate;
+
+    @NotNull(message = "Status is mandatory")
     private Integer statusId;
-    private Long userId;
-    private UserDto user;
+
+//    @NotNull(message = "userId is Mandatory")
+//    private Long userId;
+//
+//    private UserDto user;
 
     public TaskDto(Task task) {
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.createdAt = task.getCreatedAt();
+        this.dueDate = task.getDueDate();
         this.statusId = task.getTaskStatusId().getId();
-        if (task.getUser() != null) {
-            this.userId = task.getUser().getId();
-            this.user = new UserDto(task.getUser());
-        }
     }
 
 }

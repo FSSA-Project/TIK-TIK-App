@@ -10,8 +10,8 @@ import com.fssa.todo.model.Task;
 import com.fssa.todo.model.TaskStatus;
 import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,6 @@ public class TaskService {
         Task task = new Task();
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
-        task.setDueDate(taskDto.getDueDate());
 
         // Set the status
         if (taskDto.getStatusId() != null && taskDto.getStatusId() > 0) {
@@ -50,30 +49,19 @@ public class TaskService {
             task.setTaskStatusId(taskStatus);
         }
 
-        // Set the user
-        if (taskDto.getUserId() != null && taskDto.getUserId() > 0) {
-            User user = userDao.findById(taskDto.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            task.setUser(user);
-        }
+//        // Set the user
+//        if (taskDto.getUserId() != null && taskDto.getUserId() > 0) {
+//            User user = userDao.findById(taskDto.getUserId())
+//                    .orElseThrow(() -> new RuntimeException("User not found"));
+//            task.setUser(user);
+//        }
 
         // Set created at date
         task.setCreatedAt(LocalDate.now());
 
         Task savedTask = taskDao.save(task);
 
-        // Map the saved task back to TaskDto
-        TaskDto savedTaskDto = new TaskDto();
-        savedTaskDto.setId(savedTask.getId());
-        savedTaskDto.setTitle(savedTask.getTitle());
-        savedTaskDto.setDescription(savedTask.getDescription());
-        savedTaskDto.setStatusId(savedTask.getTaskStatusId().getId());
-        savedTaskDto.setDueDate(savedTask.getDueDate());
-        savedTaskDto.setUserId(savedTask.getUser().getId());
-        savedTaskDto.setCreatedAt(savedTask.getCreatedAt());
-        savedTaskDto.setDueDate(savedTask.getDueDate());
-
-        return savedTaskDto;
+        return new TaskDto(savedTask);
     }
 
 
@@ -100,13 +88,6 @@ public class TaskService {
             existingTask.setTaskStatusId(taskStatus);
         }
 
-        // Update the user if a valid user ID is provided
-        if (taskDto.getUserId() != null) {
-            User user = userDao.findById(taskDto.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            existingTask.setUser(user);
-        }
-
         Task updatedTask = taskDao.save(existingTask);
         return new TaskDto(updatedTask);
     }
@@ -114,6 +95,7 @@ public class TaskService {
 
     /**
      * below the code for delete the task
+     *
      * @param id
      */
     public void deleteTask(Long id) {
@@ -128,7 +110,7 @@ public class TaskService {
     /**
      * Below the code for get the task by id
      *
-     * @param UserId
+     * @param userId
      * @return
      */
     public List<TaskDto> listTasksByUserId(Long userId) {
@@ -160,7 +142,7 @@ public class TaskService {
 
     public TaskDto updateStatusById(Long taskId, int statusId) {
         if (taskId == null || taskId <= 0 || statusId <= 0) {
-            throw new RuntimeException("Invalid task ID or status ID");
+            throw new IllegalArgumentException("Invalid task ID or status ID");
         }
 
         // Find the existing task
@@ -227,7 +209,7 @@ public class TaskService {
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
         taskDto.setStatusId(task.getTaskStatusId().getId());
-        taskDto.setUserId(task.getUser().getId());
+//        taskDto.setUserId(task.getUser().getId());
         taskDto.setCreatedAt(task.getCreatedAt());
         taskDto.setDueDate(task.getDueDate());
         return taskDto;
