@@ -3,6 +3,7 @@ package com.fssa.todo.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class Task {
     private String description;
 
     // Define many to one and this is enum
+    @NotNull(message = "StatusId is mandatory")
     @ManyToOne
     @JoinColumn(name = "task_status_id", referencedColumnName = "id")
     private TaskStatus taskStatusId;

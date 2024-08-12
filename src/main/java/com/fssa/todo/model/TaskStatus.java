@@ -2,6 +2,8 @@ package com.fssa.todo.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,8 @@ public class TaskStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotBlank(message = "StatusId is mandatory")
+    @NotNull(message = "StatusId is mandatory")
     private Integer id;
 
     @Enumerated(EnumType.STRING)

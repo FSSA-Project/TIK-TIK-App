@@ -150,7 +150,7 @@ public class UserController {
             String token = authHeader.substring(7);
             jwtBlacklistService.blacklistToken(token);
             SecurityContextHolder.clearContext();
-            response = new ApiResponse<>("Successfully logged out", null);
+            response = new ApiResponse<>("Successfully logged ou    t", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             response = new ApiResponse<>("Token is missing", null);

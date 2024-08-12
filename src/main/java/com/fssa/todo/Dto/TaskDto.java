@@ -25,11 +25,11 @@ public class TaskDto {
     private LocalDate createdAt;
     private LocalDate dueDate;
 
-    @NotNull(message = "Status is mandatory")
+    @NotNull(message = "StatusId is mandatory")
     private Integer statusId;
 
-//    @NotNull(message = "userId is Mandatory")
-//    private Long userId;
+    @NotNull(message = "userId is Mandatory")
+    private Long userId;
 //
 //    private UserDto user;
 
@@ -39,6 +39,7 @@ public class TaskDto {
         this.description = task.getDescription();
         this.createdAt = task.getCreatedAt();
         this.dueDate = task.getDueDate();
+        this.setUserId(task.getUser().getId());
         this.statusId = task.getTaskStatusId().getId();
     }
 

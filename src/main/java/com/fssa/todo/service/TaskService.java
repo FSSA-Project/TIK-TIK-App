@@ -8,8 +8,10 @@ import com.fssa.todo.dao.TaskStatusDao;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.model.Task;
 import com.fssa.todo.model.TaskStatus;
+import com.fssa.todo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +38,21 @@ public class TaskService {
      * @return
      */
     public TaskDto createTask(TaskDto taskDto) {
+        // Ensure userId is not null
+        if (taskDto.getUserId() == null) {
+            throw new IllegalArgumentException("User ID is mandatory");
+        }
+
+        // Fetch the user entity based on the userId from TaskDto
+        User user = userDao.findById(taskDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Task task = new Task();
         task.setTitle(taskDto.getTitle());
         task.setDescription(taskDto.getDescription());
+        task.setDueDate(taskDto.getDueDate());
+        task.setCreatedAt(LocalDate.now());
+        task.setUser(user);
 
         // Set the status
         if (taskDto.getStatusId() != null && taskDto.getStatusId() > 0) {
@@ -46,16 +60,6 @@ public class TaskService {
                     .orElseThrow(() -> new RuntimeException("Task status not found"));
             task.setTaskStatusId(taskStatus);
         }
-
-//        // Set the user
-//        if (taskDto.getUserId() != null && taskDto.getUserId() > 0) {
-//            User user = userDao.findById(taskDto.getUserId())
-//                    .orElseThrow(() -> new RuntimeException("User not found"));
-//            task.setUser(user);
-//        }
-
-        // Set created at date
-        task.setCreatedAt(LocalDate.now());
 
         Task savedTask = taskDao.save(task);
 

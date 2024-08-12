@@ -35,10 +35,6 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<TaskDto>> createTask(@Valid @RequestBody TaskDto taskDto) {
         try {
-//            // Check the User there are not in DB
-//            if (taskDto.g() == null || !userDao.existsById(taskDto.getUserId())) {
-//                return new ResponseEntity<>(new ApiResponse<>("UserId doesn't exist", null), HttpStatus.BAD_REQUEST);
-//            }
 
             // Proceed with task creation
             TaskDto createdTask = taskService.createTask(taskDto);
