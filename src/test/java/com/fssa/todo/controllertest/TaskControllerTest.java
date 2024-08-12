@@ -43,8 +43,7 @@ public class TaskControllerTest {
         Long userId = 1L;
 
         List<TaskDto> taskDtos = List.of(
-                new TaskDto(1L, "test title", "test Description", LocalDate.now(),
-                        null, 1));
+                new TaskDto(1L, "test title", "test Description", LocalDate.now(), null, 1, 16L));
 
         when(taskService.listTasksByUserId(userId)).thenReturn(taskDtos);
 
@@ -59,11 +58,6 @@ public class TaskControllerTest {
 //        String responseBody = result.getResponse().getContentAsString(); to debug
 
         verify(taskService, times(1)).listTasksByUserId(userId);
-    }
-
-    public void CreateTaskTest() throws Exception {
-
-
     }
 
 
