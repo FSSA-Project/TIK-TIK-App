@@ -47,10 +47,9 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
 
       setTimeout(() => {
         setMessage(null);
-        // onClose();
-        dataUpdate();
+        onClose();
       }, 1000);
-      window.location.reload();
+      dataUpdate();
     } catch (error) {
       console.error('Error:', error);
       setMessage(error.message);

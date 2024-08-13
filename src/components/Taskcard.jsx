@@ -57,7 +57,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
 
   const truncateDescription = (description) => {
     if (typeof description === 'string' && description.length > 120) {
-      return `${description.slice(0, 105)}... `;
+      return `${description.slice(0, 100)}... `;
     }
     return description || '';
   };
