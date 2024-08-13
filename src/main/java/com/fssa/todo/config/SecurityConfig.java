@@ -6,17 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -56,7 +51,8 @@ public class SecurityConfig {
 
     /**
      * This is for filter chain and maintain the
-     * security for the api's
+     * security for the API's
+     *
      * @param httpSecurity
      * @return
      * @throws Exception
@@ -66,12 +62,18 @@ public class SecurityConfig {
 
         httpSecurity.csrf(Customizer -> Customizer.disable()) // Disable the csrf token for browser
                 .authorizeHttpRequests(Request -> Request
-                        .requestMatchers("/api/v1/user/register", "/api/v1/user/login")
+                        .requestMatchers("/api/v1/user/register", "/api/v1/user/login", "/oauth2/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
+
+                // Implement the OAuth
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/oauth2/authorization/google")
+                        .defaultSuccessUrl("/api/v1/task/tasks")
+                )
                 .sessionManagement(Session -> Session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // This means i dont want to maintain  the session
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // This means I don't want to maintain  the session
 
         return httpSecurity.build();
     }

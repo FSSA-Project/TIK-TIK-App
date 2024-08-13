@@ -139,8 +139,9 @@ public class UserController {
      * Below the code for logout the user
      * code
      *
-     * @param request
-     * @return
+     * @param request Parameter get the header from the
+     *  Authorization
+     * @return the Message Logout
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request) {
@@ -150,7 +151,7 @@ public class UserController {
             String token = authHeader.substring(7);
             jwtBlacklistService.blacklistToken(token);
             SecurityContextHolder.clearContext();
-            response = new ApiResponse<>("Successfully logged ou    t", null);
+            response = new ApiResponse<>("Successfully logged out", null);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             response = new ApiResponse<>("Token is missing", null);
