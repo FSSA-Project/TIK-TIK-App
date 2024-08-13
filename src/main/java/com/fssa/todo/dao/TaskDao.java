@@ -26,7 +26,8 @@ public interface TaskDao extends JpaRepository<Task, Long> {
             "FROM Task t WHERE t.user.id = :userId")
     TaskStatusCountDTO getTaskCountsByStatus(@Param("userId") Long userId);
 
-    @Query("SELECT t FROM Task t WHERE LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))")
-    List<Task> searchByTitleOrDescription(@Param("query") String query);
+    @Query("SELECT t FROM Task t WHERE (LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) AND t.user.id = :userId")
+    List<Task> searchByTitleOrDescription(@Param("query") String query, @Param("userId") Long userId);
+
 
 }

@@ -33,11 +33,14 @@ public class TaskController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<TaskDto>> createTask(@Valid @RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<TaskDto>> createTask(@Valid @RequestBody TaskDto taskDto, @RequestHeader("Authorization") String token) {
         try {
 
+            // get the token
+            token = token.replace("Bearer ", "");
+
             // Proceed with task creation
-            TaskDto createdTask = taskService.createTask(taskDto);
+            TaskDto createdTask = taskService.createTask(taskDto, token);
             ApiResponse<TaskDto> response = new ApiResponse<>("Task successfully created", createdTask);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -106,11 +109,13 @@ public class TaskController {
      * @return the List of Task
      */
     @PatchMapping("/update")
-    public ResponseEntity<ApiResponse<List<TaskDto>>> updateTask(@Valid @RequestBody TaskDto taskDto) {
+    public ResponseEntity<ApiResponse<List<TaskDto>>> updateTask(@Valid @RequestBody TaskDto taskDto, @RequestHeader("Authorization") String token) {
         try {
-            TaskDto updatedTask = taskService.updateTask(taskDto.getId(), taskDto);
+            // get the token from the Header
+            token = token.replace("Bearer ", "");
+            TaskDto updatedTask = taskService.updateTask(taskDto.getId(), taskDto, token);
             List<TaskDto> taskList = updatedTask != null ? List.of(updatedTask) : new ArrayList<>();
-            ApiResponse<List<TaskDto>> response = new ApiResponse<>("Task updated SuccessFully", taskList);
+            ApiResponse<List<TaskDto>> response = new ApiResponse<>("Task updated Successfully", taskList);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
             ApiResponse<List<TaskDto>> response = new ApiResponse<>(e.getMessage(), new ArrayList<>());
@@ -120,6 +125,7 @@ public class TaskController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     /**
      * Below the code for Get the task by task id
@@ -212,12 +218,14 @@ public class TaskController {
      * Database
      *
      * @param search
-     * @return
+     * @return the data from the Database to the users
      */
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<TaskDto>>> searchTasks(@RequestParam String search) {
+    public ResponseEntity<ApiResponse<List<TaskDto>>> searchTasks(@RequestParam String search, @RequestHeader("Authorization") String token) {
         try {
-            List<TaskDto> tasks = taskService.searchTasks(search);
+            // get the token from the Payload
+            token = token.replace("Bearer ", "");
+            List<TaskDto> tasks = taskService.searchTasks(search, token);
             ApiResponse<List<TaskDto>> response = new ApiResponse<>("Search Result", tasks);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
