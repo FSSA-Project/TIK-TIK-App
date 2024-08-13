@@ -7,15 +7,20 @@ import '../App.css';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
-  const [inputTypeDate, setInputTypeDate] = useState('text');
+  // const [inputTypeDate, setInputTypeDate] = useState('text');
   const [token] = useSessionStorage('token');
-  const [id] = useSessionStorage('userId');
+  const [userId] = useSessionStorage('userId');
+  const [userName] = useSessionStorage('userName');
   const [isDataUpdated, setIsDataUpdated] = useState(false);
+  // const [showInputFields, setShowInputFields] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
+  // Callback to trigger data updates
   const callBackFuncForDataUpdate = () => {
     setIsDataUpdated((prev) => !prev); 
   }
 
+  // Fetch tasks on component mount and when data updates
   useEffect(() => {
     const fetchTasks = async () => {
       console.log("fetchTasks: Fetching tasks...");
@@ -26,7 +31,7 @@ const Dashboard = () => {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ id })
+          body: JSON.stringify({ userId }),
         });
     
         if (!response.ok) {
@@ -36,7 +41,6 @@ const Dashboard = () => {
         const result = await response.json();
         console.log('fetchTasks: Fetched tasks data:', result);
     
-        console.log("Extract the `data` property from the result and ensure it's an array");
         if (Array.isArray(result.data)) {
           setTasks(result.data);
           console.log('fetchTasks: Tasks set successfully:', result.data);
@@ -53,53 +57,123 @@ const Dashboard = () => {
     };
 
     if (token) {
-      console.log("useEffect: Token exists, fetching data from backend...");
+      console.log("useEffect: Token exists, fetching data...");
       fetchTasks();
     } else {
       console.log("useEffect: No token found.");
     }
-  }, [token, id, isDataUpdated]);
+  }, [token, userId, isDataUpdated]);
 
+  // Search function to filter tasks based on query
+  const search = async () => {
+    console.log(`search: Initiating search with query "${searchQuery}"...`);
+    try {
+      const response = await fetch(`https://todo-app-wpbz.onrender.com/api/v1/task/search?search=${encodeURIComponent(searchQuery)}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('search: Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('search: Received search results:', result);
+
+      if (Array.isArray(result.data)) {
+        setTasks(result.data);
+        console.log('search: Tasks set successfully after search:', result.data);
+      } else {
+        console.error('search: Unexpected data format:', result);
+        setTasks([]);
+      }
+    } catch (error) {
+      console.error('search: Error during search operation:', error);
+      setTasks([]);
+    }
+  };
+
+  // Handle task drop to update status
   const handleDrop = async (taskId, newStatus) => {
-    console.log(`handleDrop: Changing status of task ${taskId} to ${newStatus}`);
-    console.log("Update the status of the task locally");
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
+    console.log(`handleDrop: Attempting to change status of task ${taskId} to ${newStatus}...`);
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
         task.id === taskId ? { ...task, statusId: newStatus } : task
       )
     );
-  
-    console.log("Call the API to save the changes");
-    const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/update/status', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        id: taskId,
-        statusId: newStatus,
-      }),
-    });
-  
-    console.log("Handle the response from the server");
-    if (response.ok) {
-      console.log(`Task ${taskId} status updated successfully.`);
-    } else {
-      console.error(`Failed to update task ${taskId} status.`);
+
+    try {
+      const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/update/status', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          id: taskId,
+          statusId: newStatus,
+        }),
+      });
+
+      if (response.ok) {
+        console.log(`handleDrop: Task ${taskId} status updated successfully.`);
+      } else {
+        console.error(`handleDrop: Failed to update task ${taskId} status.`);
+      }
+    } catch (error) {
+      console.error(`handleDrop: Error updating task ${taskId} status:`, error);
     }
   };
-  
-  console.log("After function", tasks)
-  const toStartTasks = tasks.filter(task => task.statusId === 1);
-  const inProgressTasks = tasks.filter(task => task.statusId === 2);
-  const completedTasks = tasks.filter(task => task.statusId === 3);
 
   const removeTask = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
+    console.log(`removeTask: Removing task with ID ${taskId}.`);
+    setTasks(tasks.filter((task) => task.id !== taskId));
   };
 
-  console.log("Dashboard: Rendering with tasks:", tasks);
+  // Component to display user avatar or initial
+  const UserAvatar = () => {
+    const usernameInitial = userName ? userName.charAt(0).toUpperCase() : null;
+
+    return (
+      <div className="user-avatar" title="profile">
+        {usernameInitial ? (
+          <div style={styles.profile} title={userName}>
+            {usernameInitial}
+          </div>
+        ) : (
+          <img
+            src='https://discoveries.vanderbilthealth.com/wp-content/uploads/2023/09/test-Headshot.jpg'
+            alt='profile-image'
+          />
+        )}
+      </div>
+    );
+  };
+
+  const styles = {
+    profile: {
+      width: '50px',
+      height: '50px',
+      borderRadius: '50%',
+      backgroundColor: '#dde8ff',
+      display: 'flex',
+      border:'3px solid #202d48',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: '#202d48',
+      fontSize: '24px',
+      fontWeight: 'bold',
+    },
+  };
+
+  // Filter tasks by their status
+  const toStartTasks = tasks.filter((task) => task.statusId === 1);
+  const inProgressTasks = tasks.filter((task) => task.statusId === 2);
+  const completedTasks = tasks.filter((task) => task.statusId === 3);
+
+  console.log('Dashboard: Rendering with tasks:', tasks);
 
   return (
     <div className='dashboard-container'>
@@ -118,24 +192,46 @@ const Dashboard = () => {
               </svg>
               New task
             </button>
-            <div className="user-avatar">
-              <img src='https://discoveries.vanderbilthealth.com/wp-content/uploads/2023/09/test-Headshot.jpg' alt='profile-image' />
-            </div>
+            <UserAvatar />
           </div>
         </header>
+
         {/* Search div */}
         <div className="dashboard-header-container-2">
           <div className="search">
-            <input type="text" placeholder="Search" />
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none" className="search-icon">
-              <path d="M17.5 17.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-            </svg>
+          <input 
+            type="text" 
+            placeholder="Search" 
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              console.log(`Search input updated: ${e.target.value}`);
+              search(); // Call the search function after updating the query
+            }}
+          />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none" className="search-icon">
+                <path d="M17.5 17.5L22 22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+              </svg>
           </div>
-          <div className="date-filter">
-            <input placeholder={inputTypeDate === 'text' ? 'From' : ''} onFocus={() => setInputTypeDate('date')} type={inputTypeDate} />
-            <input placeholder={inputTypeDate === 'text' ? 'To' : ''} onFocus={() => setInputTypeDate('date')} type={inputTypeDate} />
-          </div>
+          {/* <div className="date-filter">
+            <input 
+              placeholder={inputTypeDate === 'text' ? 'From' : ''} 
+              onFocus={() => {
+                console.log("Date input (From) focused, changing input type to date.");
+                setInputTypeDate('date');
+              }} 
+              type={inputTypeDate} 
+            />
+            <input 
+              placeholder={inputTypeDate === 'text' ? 'To' : ''} 
+              onFocus={() => {
+                console.log("Date input (To) focused, changing input type to date.");
+                setInputTypeDate('date');
+              }} 
+              type={inputTypeDate} 
+            />
+          </div> */}
         </div>
 
         <div className="task-columns">

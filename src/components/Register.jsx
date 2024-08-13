@@ -90,7 +90,7 @@ const RegisterForm = () => {
       if (response.ok) {
         setMessage('Register successfully');
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/');
         }, 1000);
       } else {
         setMessage(`Register failed: ${data.message}`);
