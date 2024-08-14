@@ -1,6 +1,5 @@
 package com.fssa.todo.service;
 
-
 import com.fssa.todo.Dto.UserDto;
 import com.fssa.todo.dao.UserDao;
 import com.fssa.todo.exception.UserRegistrationException;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -24,10 +23,9 @@ public class UserService {
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); // set the strength as 12 rounds
 
     /**
-     * Code for get the all user from the
-     * DB
+     * Code for getting all users from the DB
      *
-     * @return
+     * @return ResponseEntity<List<User>>
      */
     public ResponseEntity<List<User>> getAllUsers() {
         try {
@@ -38,13 +36,11 @@ public class UserService {
     }
 
     /**
-     * This is for insert the user data into the
-     * database
+     * This is for inserting user data into the database
      *
-     * @Return String
+     * @return UserDto
      */
     public UserDto addUser(UserDto userDto) {
-
         User existingUser = userDao.findByEmail(userDto.getEmail());
         if (existingUser != null) {
             throw new UserRegistrationException("Email already exists");
@@ -58,7 +54,7 @@ public class UserService {
 
         User savedUser = userDao.save(user);
 
-        // Convert saved entity to DTO in Response obj
+        // Convert saved entity to DTO in Response object
         UserDto savedUserDto = new UserDto();
         savedUserDto.setId(savedUser.getId());
         savedUserDto.setName(savedUser.getName());
@@ -68,13 +64,13 @@ public class UserService {
     }
 
     /**
-     * Below the code for login User
+     * Code for logging in a user
      *
-     * @param userDto
-     * @return
+     * @param email
+     * @param password
+     * @return UserDto
      */
     public UserDto loginUser(String email, String password) {
-
         User user = userDao.findByEmail(email);
         if (user != null && encoder.matches(password, user.getPassword())) { // Check the password matches
             // Create a new UserDto
@@ -89,32 +85,57 @@ public class UserService {
         }
     }
 
-
     /**
-     * Code for get the profile from the DB
+     * Code for getting the profile from the DB
      *
      * @param email
-     * @return
+     * @return UserDto
      */
     public UserDto getUserProfile(String email) {
         User user = userDao.findByEmail(email);
         if (user != null) {
-            // Create a obj of userDto
+            // Create a UserDto
             UserDto userDto = new UserDto();
             userDto.setId(user.getId());
             userDto.setEmail(user.getEmail());
-            userDto.setPassword(user.getPassword());
             userDto.setName(user.getName());
             userDto.setDob(user.getDob());
             userDto.setAddress(user.getAddress());
-            userDto.setPassword(user.getPassword());
+            userDto.setPassword(user.getPassword()); // Handle password with caution
 
             return userDto;
         } else {
-            throw new RuntimeException("Invaild email or cannot find");
+            throw new RuntimeException("Invalid email or cannot find user");
         }
     }
+
+    /**
+     * Method to find a user by email
+     *
+     * @param email
+     * @return User
+     */
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+    /**
+     * Method to save a user (create or update)
+     *
+     * @param user
+     * @return User
+     */
+    public User saveUser(User user) {
+        return userDao.save(user);
+    }
+
+    /**
+     * Method to update a user
+     *
+     * @param user
+     * @return User
+     */
+    public User updateUser(User user) {
+        return userDao.save(user);
+    }
 }
-
-
-

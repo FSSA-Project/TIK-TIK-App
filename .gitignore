@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .env
+# Ignore service account key
+src/main/resources/serviceAccountKey.json
+
 
 ### STS ###
 .apt_generated

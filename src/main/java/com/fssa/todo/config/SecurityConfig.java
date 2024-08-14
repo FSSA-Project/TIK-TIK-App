@@ -62,16 +62,11 @@ public class SecurityConfig {
 
         httpSecurity.csrf(Customizer -> Customizer.disable()) // Disable the csrf token for browser
                 .authorizeHttpRequests(Request -> Request
-                        .requestMatchers("/api/v1/user/register", "/api/v1/user/login", "/oauth2/**")
+                        .requestMatchers("/api/v1/user/register", "/api/v1/user/login", "/api/v1/user/auth/google/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
 
-                // Implement the OAuth
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/oauth2/authorization/google")
-                        .defaultSuccessUrl("/api/v1/task/tasks")
-                )
                 .sessionManagement(Session -> Session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // This means I don't want to maintain  the session
 
