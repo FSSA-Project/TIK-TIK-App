@@ -16,11 +16,10 @@ public class FirebaseConfig {
     public void initializeFirebase() {
         try {
 
-
 //            String filePath = "/path/to/google-services.json"; // This is for checking the local
+            String filePath = "/etc/secrets/serviceAccountKey.json";
 
-
-            FileInputStream serviceAccount = new FileInputStream("/etc/secrets/serviceAccountKey.json");
+            FileInputStream serviceAccount = new FileInputStream(filePath);
 
             // Read JSON from environment variable
             String json = System.getenv("FIREBASE_SERVICE_ACCOUNT_KEY");
