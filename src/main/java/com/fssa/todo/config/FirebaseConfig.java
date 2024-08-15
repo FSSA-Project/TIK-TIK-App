@@ -5,10 +5,9 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
-import java.io.ByteArrayInputStream;
+
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class FirebaseConfig {
@@ -16,7 +15,12 @@ public class FirebaseConfig {
     @PostConstruct
     public void initializeFirebase() {
         try {
+
+
 //            String filePath = "/path/to/google-services.json"; // This is for checking the local
+
+
+            FileInputStream serviceAccount = new FileInputStream("/etc/secrets/serviceAccountKey.json");
 
             // Read JSON from environment variable
             String json = System.getenv("FIREBASE_SERVICE_ACCOUNT_KEY");
@@ -24,7 +28,6 @@ public class FirebaseConfig {
                 throw new IllegalStateException("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set");
             }
 
-            FileInputStream serviceAccount = new FileInputStream(json);
 
             //  TODO: need to understand
 //            ByteArrayInputStream serviceAccount = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
