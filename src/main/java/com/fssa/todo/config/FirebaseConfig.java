@@ -15,31 +15,24 @@ public class FirebaseConfig {
     @PostConstruct
     public void initializeFirebase() {
         try {
-
-//            String filePath = "/path/to/google-services.json"; // This is for checking the local
+            // Path to the Firebase service account key file created by Render
             String filePath = "/etc/secrets/serviceAccountKey.json";
 
+            // Initialize the FileInputStream with the service account key file
             FileInputStream serviceAccount = new FileInputStream(filePath);
 
-            // Read JSON from environment variable
-            String json = System.getenv("FIREBASE_SERVICE_ACCOUNT_KEY");
-            if (json == null || json.isEmpty()) {
-                throw new IllegalStateException("FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set");
-            }
-
-
-            //  TODO: need to understand
-//            ByteArrayInputStream serviceAccount = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-
+            // Build FirebaseOptions with the credentials
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
+            // Initialize Firebase if it hasn't been initialized already
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to initialize Firebase", e);
         }
     }
 }
