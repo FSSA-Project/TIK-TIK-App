@@ -6,6 +6,7 @@ target/
 .env
 # Ignore service account key
 src/main/resources/serviceAccountKey.json
+etc/secrets/serviceAccountKey.json
 
 
 ### STS ###

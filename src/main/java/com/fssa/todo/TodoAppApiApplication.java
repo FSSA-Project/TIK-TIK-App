@@ -16,6 +16,7 @@ public class TodoAppApiApplication {
         // Set environment variables
 //        Dotenv dotenv = Dotenv.load();
 //        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+//        System.setProperty("DEFAULT_PASSWORD", dotenv.get("DEFAULT_PASSWORD"));
 
         SpringApplication.run(TodoAppApiApplication.class, args);
 

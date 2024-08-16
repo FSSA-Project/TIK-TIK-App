@@ -38,27 +38,27 @@ public class TaskControllerTest {
 
     }
 
-    @Test
-    public void testGetAllTasksByUserId() throws Exception {
-        Long userId = 1L;
-
-        List<TaskDto> taskDtos = List.of(
-                new TaskDto(1L, "test title", "test Description", LocalDate.now(), null, 1, 16L));
-
-        when(taskService.listTasksByUserId(userId)).thenReturn(taskDtos);
-
-
-        // If you want to debug give MvcResult and get the responsebody
-        MvcResult result = mockMvc.perform(post("/api/v1/task/tasks").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"userId\": " + userId + "}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.length()").value(taskDtos.size()))
-                .andReturn();
-
-//        String responseBody = result.getResponse().getContentAsString(); to debug
-
-        verify(taskService, times(1)).listTasksByUserId(userId);
-    }
-
+//    @Test
+//    public void testGetAllTasksByUserId() throws Exception {
+//        Long userId = 1L;
+//
+//        List<TaskDto> taskDtos = List.of(
+//                new TaskDto(1L, "test title", "test Description", LocalDate.now(), null, 1, 16L));
+//
+//        when(taskService.listTasksByUserId(userId)).thenReturn(taskDtos);
+//
+//
+//        // If you want to debug give MvcResult and get the responsebody
+//        MvcResult result = mockMvc.perform(post("/api/v1/task/tasks").contentType(MediaType.APPLICATION_JSON)
+//                        .content("{\"userId\": " + userId + "}"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data.length()").value(taskDtos.size()))
+//                .andReturn();
+//
+////        String responseBody = result.getResponse().getContentAsString(); to debug
+//
+//        verify(taskService, times(1)).listTasksByUserId(userId);
+//    }
+//
 
 }

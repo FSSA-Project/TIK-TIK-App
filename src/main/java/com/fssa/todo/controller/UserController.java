@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,10 @@ import java.util.Map;
 @Validated
 public class UserController {
 
+    // This value annotation get the value from the env system proprieties
+    @Value("${DEFAULT_PASSWORD}")
+    private String defaultPassword;
+
     @Autowired
     private UserService userService;
 
@@ -44,7 +49,7 @@ public class UserController {
     @Autowired
     private JwtBlacklistService jwtBlacklistService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     // To return the empty string in response
     String[] emptyArray = new String[]{};
@@ -191,7 +196,7 @@ public class UserController {
                 user.setEmail(email);
                 user.setName(name);
                 // Set a default password or handle this separately
-                user.setPassword(encoder.encode("default_password")); // Example: You can use a placeholder password
+                user.setPassword(encoder.encode(defaultPassword));
                 userService.saveUser(user);
             } else {
                 if (name != null && !name.equals(user.getName())) {

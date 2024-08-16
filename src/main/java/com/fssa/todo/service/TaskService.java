@@ -164,15 +164,22 @@ public class TaskService {
     /**
      * Below the code for get the task by id
      *
-     * @param userId
+     * @param token
      * @return
      */
-    public List<TaskDto> listTasksByUserId(Long userId) {
-        if (userId == null || userId <= 0) {
-            throw new RuntimeException("Validation error!");
+    public List<TaskDto> listTasksByUserId(String token) {
+
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Token is error!");
         }
 
-        List<Task> tasks = taskDao.findByUserId(userId);
+        // Extract the token
+        String email = jwtService.extractEmail(token);
+
+        // Find the userId by their mail
+        User user = userDao.findByEmail(email);
+
+        List<Task> tasks = taskDao.findByUserId(user.getId());
         if (tasks == null || tasks.isEmpty()) {
             throw new RuntimeException("No tasks found for the user");
         }

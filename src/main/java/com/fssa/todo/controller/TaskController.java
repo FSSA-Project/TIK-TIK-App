@@ -56,10 +56,12 @@ public class TaskController {
      * @return
      */
     @PostMapping("/tasks")
-    public ResponseEntity<ApiResponse<List<TaskDto>>> listTasksByUserId(@RequestBody Map<String, Long> payload) {
+    public ResponseEntity<ApiResponse<List<TaskDto>>> listTasksByUserId(@RequestHeader("Authorization") String token) {
         try {
-            Long userId = payload.get("userId");
-            List<TaskDto> tasks = taskService.listTasksByUserId(userId);
+            // Extract the token
+            token = token.replace("Bearer ","");
+
+            List<TaskDto> tasks = taskService.listTasksByUserId(token);
             ApiResponse<List<TaskDto>> response = new ApiResponse<>("Data Retrieved Successfully", tasks);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
