@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import useSessionStorage from './Auth';
 import '../styles/Dashboard.css';
 import { TaskColumnCompleted, TaskColumnInProgress, TaskColumnToStart } from './Taskcolumn';
 import Sidebar from './Sidebar';
 import '../App.css';
 
+const useSessionStorage = (key) => sessionStorage.getItem(key);
+
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   // const [inputTypeDate, setInputTypeDate] = useState('text');
-  const [token] = useSessionStorage('token');
-  const [userId] = useSessionStorage('userId');
-  const [userName] = useSessionStorage('userName');
+  const User = JSON.parse(useSessionStorage('userProfile'));
+  const token = User.idToken;
+  const userName = User.userName;
+  const profileURL = User.photoURL;
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   // const [showInputFields, setShowInputFields] = useState(false);
   const [searchQuery, setSearchQuery] = useState(''); // State for search query
@@ -30,8 +32,7 @@ const Dashboard = () => {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ userId }),
+          }
         });
     
         if (!response.ok) {
@@ -62,7 +63,7 @@ const Dashboard = () => {
     } else {
       console.log("useEffect: No token found.");
     }
-  }, [token, userId, isDataUpdated]);
+  }, [token, isDataUpdated]);
 
   // Search function to filter tasks based on query
   const search = async () => {
@@ -138,14 +139,19 @@ const Dashboard = () => {
 
     return (
       <div className="user-avatar" title="profile">
-        {usernameInitial ? (
+        {profileURL ? (
+          <img
+            src={profileURL}
+            alt="profile-image"
+          />
+        ) : usernameInitial ? (
           <div style={styles.profile} title={userName}>
             {usernameInitial}
           </div>
         ) : (
           <img
             src='https://discoveries.vanderbilthealth.com/wp-content/uploads/2023/09/test-Headshot.jpg'
-            alt='profile-image'
+            alt='default-profile-image'
           />
         )}
       </div>
@@ -237,7 +243,7 @@ const Dashboard = () => {
         <div className="task-columns">
           <div className='to-start'>
             <p className='to-start-color'></p>To Start ({toStartTasks?.length || 0})
-          </div>
+           </div>
           <div className='in-progress'>
             <p className='in-progress-color'></p>In Progress ({inProgressTasks?.length || 0})
           </div>

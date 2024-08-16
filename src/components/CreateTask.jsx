@@ -8,9 +8,8 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const token = useSessionStorage('token');
-  const userId = useSessionStorage('userId');
-
+  const User = JSON.parse(useSessionStorage('userProfile'));
+  const Token = User.idToken
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prevData) => ({ ...prevData, [name]: value }));
@@ -19,17 +18,17 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
   const handleAddTask = async () => {
     const newTask = {
       ...taskData,
-      statusId: 1,
-      userId: userId,
+      statusId: 1
     };
-    console.log(token);
+    console.log(Token);
+    console.log(newTask);
     setLoading(true);
     try {
       const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${Token}`,
         },
         body: JSON.stringify(newTask),
       });
