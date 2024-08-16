@@ -13,6 +13,8 @@ import java.io.IOException;
 @Configuration
 public class FirebaseConfig {
 
+
+    // This is for local to get the system properties
     @Value("${firebase.config.path}")
     private String firebaseConfigPath;
 
@@ -20,10 +22,10 @@ public class FirebaseConfig {
     public void initializeFirebase() {
         try {
             // Path to the Firebase service account key file created by Render
-            String filePath = "/etc/secrets/serviceAccountKey.json";
+            String filePath = "etc/secrets/serviceAccountKey.json";
 
             // Initialize the FileInputStream with the service account key file
-            FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+            FileInputStream serviceAccount = new FileInputStream(filePath);
 
             // Build FirebaseOptions with the credentials
             FirebaseOptions options = new FirebaseOptions.Builder()
