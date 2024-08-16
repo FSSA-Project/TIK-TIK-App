@@ -58,7 +58,7 @@ public class jwtService {
 
     }
 
-    // Create a new method in key that is inbuild security in spring
+    // Create a new method in key that is inbuilt security in spring
     private Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

@@ -33,6 +33,7 @@ public class UserDto {
     private String phoneNumber;
     private Date dob;
     private String address;
+    private String profileLink;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String token;
 

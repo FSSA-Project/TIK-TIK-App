@@ -132,10 +132,13 @@ public class UserController {
      * @param userDto
      * @return
      */
-    @PostMapping("/profile")
-    public ResponseEntity<ApiResponse<UserDto>> getUserProfile(@Valid @RequestBody UserDto userDto) {
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse<UserDto>> getUserProfile(@RequestHeader ("Authorization") String token) {
         try {
-            UserDto responseDto = userService.getUserProfile(userDto.getEmail());
+            // replace the token with space
+            token = token.replace("Bearer ","");
+
+            UserDto responseDto = userService.getUserProfile(token);
             ApiResponse<UserDto> response = new ApiResponse<>("Data Retrived Sucess", responseDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -169,6 +172,13 @@ public class UserController {
         }
     }
 
+
+    /**
+     * Below the code for Auth with google sigin
+     * @param request the get Id from the google
+     * @return the jwt token to the front-end
+     */
+
     @PostMapping("/auth/google") // api/v1/user/auth/google
     public ResponseEntity<ApiResponse<?>> authenticateWithGoogle(@RequestBody Map<String, String> request) {
         try {
@@ -182,7 +192,8 @@ public class UserController {
 
             // Extract email and name from the token
             String email = decodedToken.getEmail();
-            String name = decodedToken.getName(); // Assuming you have a way to get the user's name
+            String name = decodedToken.getName();
+            String profileLink = decodedToken.getPicture();
 
             if (email == null || email.isEmpty()) {
                 return ResponseEntity.badRequest().body(new ApiResponse<>("Email is missing in the token", null));
@@ -195,6 +206,7 @@ public class UserController {
                 user = new User();
                 user.setEmail(email);
                 user.setName(name);
+                user.setProfileLink(profileLink);
                 // Set a default password or handle this separately
                 user.setPassword(encoder.encode(defaultPassword));
                 userService.saveUser(user);
@@ -211,7 +223,6 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (FirebaseAuthException e) {
-            // Handle Firebase authentication errors
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>("Invalid ID Token", null));
         } catch (Exception e) {
             // Handle other exceptions

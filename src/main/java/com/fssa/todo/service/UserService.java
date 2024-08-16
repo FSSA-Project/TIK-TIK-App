@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fssa.todo.jwtutil.jwtService;
 
 @Service
 public class UserService {
@@ -19,12 +20,15 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private jwtService jwtService;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); // set the strength as 12 rounds
 
     /**
      * Code for getting all users from the DB
      *
-     * @return ResponseEntity<List<User>>
+     * @return ResponseEntity<List < User>>
      */
     public ResponseEntity<List<User>> getAllUsers() {
         try {
@@ -90,7 +94,11 @@ public class UserService {
      * @param email
      * @return UserDto
      */
-    public UserDto getUserProfile(String email) {
+    public UserDto getUserProfile(String token) {
+
+        // Extract the token and get the email and find the id
+        String email = jwtService.extractEmail(token);
+
         User user = userDao.findByEmail(email);
         if (user != null) {
             // Create a UserDto
@@ -100,7 +108,7 @@ public class UserService {
             userDto.setName(user.getName());
             userDto.setDob(user.getDob());
             userDto.setAddress(user.getAddress());
-            userDto.setPassword(user.getPassword()); // Handle password with caution
+            userDto.setProfileLink(user.getProfileLink());
 
             return userDto;
         } else {

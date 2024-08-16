@@ -51,6 +51,9 @@ public class User {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "profile_link")
+    private String profileLink;
+
 
     // TODO: need to understand the code
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
