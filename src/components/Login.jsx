@@ -38,7 +38,7 @@ const LoginForm = () => {
         newErrors.password = 'Password must contain at least one special character';
       }
     }
-    
+
     return newErrors;
   };
 
