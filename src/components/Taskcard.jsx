@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Taskcard.css';
 import { useDrag } from 'react-dnd';
-import useSessionStorage from './Auth';
+
+const useSessionStorage = (key) => sessionStorage.getItem(key);
 
 const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const optionsMenuRef = useRef(null);
-  const [token] = useSessionStorage('token');
+  const token = JSON.parse(useSessionStorage('usertoken'));
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);

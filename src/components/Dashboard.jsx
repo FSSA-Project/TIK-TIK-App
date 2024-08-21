@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   // const [inputTypeDate, setInputTypeDate] = useState('text');
   const User = JSON.parse(useSessionStorage('userProfile'));
-  const token = User.idToken;
+  const token = JSON.parse(useSessionStorage('usertoken'));
   const userName = User.userName;
   const profileURL = User.photoURL;
   const [isDataUpdated, setIsDataUpdated] = useState(false);

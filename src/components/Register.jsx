@@ -86,7 +86,8 @@ const RegisterForm = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+      let userProfileToken = data.data; //Need to mention as data.data
+      sessionStorage.setItem('userToken', JSON.stringify(userProfileToken));
 
       if (response.ok) {
         setMessage('Register successfully');

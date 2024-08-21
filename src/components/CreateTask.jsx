@@ -7,9 +7,8 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
   const [taskData, setTaskData] = useState({ title: '', description: '' });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const token = JSON.parse(useSessionStorage('usertoken'));
 
-  const User = JSON.parse(useSessionStorage('userProfile'));
-  const Token = User.idToken
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prevData) => ({ ...prevData, [name]: value }));
@@ -20,7 +19,7 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
       ...taskData,
       statusId: 1
     };
-    console.log(Token);
+    console.log(token);
     console.log(newTask);
     setLoading(true);
     try {
@@ -28,12 +27,13 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(newTask),
       });
       console.log("Response in Creating Task", response);
       if (!response.ok) {
+        console.log(response.message);
         throw new Error('Failed to create task');
       }
 
