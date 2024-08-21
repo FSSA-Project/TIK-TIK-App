@@ -84,7 +84,7 @@ public class TaskService {
 
     public TaskDto updateTask(Long id, TaskDto taskDto, String token) {
         if (id == null || id < 0 || taskDto == null || token == null || token.isEmpty()) {
-            throw new IllegalArgumentException("Invalid id or token");
+            throw new IllegalArgumentException("Invalid task id or token");
         }
 
         // Extract the email from the token and get the userId

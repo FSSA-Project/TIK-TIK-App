@@ -94,8 +94,8 @@ public class UserController {
     /**
      * Below the code for login the user
      *
-     * @param userDto
-     * @return
+     * @param payload from this get the email and password
+     * @return the Response the JWT token
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<?>> loginUser(@RequestBody Map<String, String> payload) {

@@ -67,7 +67,6 @@ public class jwtService {
 
     // This method is for extract the user email from the email
     public String extractEmail(String token) {
-
         return extractClaim(token, Claims::getSubject);
     }
 
