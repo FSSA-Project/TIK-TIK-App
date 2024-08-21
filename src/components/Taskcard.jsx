@@ -1,26 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/Taskcard.css';
 import { useDrag } from 'react-dnd';
-import useSessionStorage from './Auth';
+
+const useSessionStorage = (key) => sessionStorage.getItem(key);
 
 const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const optionsMenuRef = useRef(null);
-  const [token] = useSessionStorage('token');
+  const token = JSON.parse(useSessionStorage('usertoken'));
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
   const [editDescription, setEditDescription] = useState(description);
   const [loading, setLoading] = useState(false);
-  
+  const [initialTitle, setInitialTitle] = useState(title);
+  const [initialDescription, setInitialDescription] = useState(description);
+
+  useEffect(() => {
+    if (isEditing) {
+      setInitialTitle(title);
+      setInitialDescription(description);
+    }
+  }, [isEditing, title, description]);
+
   const handleOptionsClick = () => setShowOptions(!showOptions);
   const handleToggleDesc = () => setShowFullDesc(!showFullDesc);
   const handleEditClick = () => {
     setIsEditing(true);
     setShowOptions(false);
   }
-  const handleCancelEdit = () => setIsEditing(false);
-
+  const handleCancelEdit = () => { 
+    setIsEditing(false);
+    setEditTitle(initialTitle);
+    setEditDescription(initialDescription);
+  }
   const handleClickOutside = (event) => {
     if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
       setShowOptions(false);
@@ -45,7 +58,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
 
   const truncateDescription = (description) => {
     if (typeof description === 'string' && description.length > 120) {
-      return `${description.slice(0, 105)}... `;
+      return `${description.slice(0, 100)}... `;
     }
     return description || '';
   };
@@ -84,6 +97,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
 
   // Delete task
   const deleteTask = async (removeTask) => {
+    setShowOptions(false);
     try {
       const response = await fetch(`https://todo-app-wpbz.onrender.com/api/v1/task/delete`, {
         method: 'DELETE',
@@ -96,7 +110,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
 
       if (response.ok) {
         removeTask(id);
-        setShowOptions(false);
+        //window.location.reload();
         dataUpdate();
       } else {
         console.error('Failed to delete the task');
@@ -104,6 +118,10 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
     } catch (error) {
       console.error('An error occurred while deleting the task:', error);
     }
+  };
+
+  const isUpdateButtonDisabled = () => {
+    return editTitle === initialTitle && editDescription === initialDescription;
   };
   
   return (
@@ -156,7 +174,7 @@ const TaskCard = ({ id, title, description, createdAt, statusId, dataUpdate }) =
             placeholder="Description"
           ></textarea>
           <div className="button-group">
-          <button className="save-button" onClick={handleSaveEdit} disabled={loading}>{loading ? <div class="loader"></div> : 'Update' }</button>
+          <button className="save-button" onClick={handleSaveEdit} disabled={loading || isUpdateButtonDisabled()}>{loading ? <div class="loader"></div> : 'Update' }</button>
           <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
           </div>
       </div>

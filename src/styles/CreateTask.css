@@ -86,3 +86,13 @@
     color: #1f2937;
     margin: 5px 0px 0px 0px;
   }
+
+  .update-task-container {
+    .button-group {
+      .save-button:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+      }
+    }
+  }
+  

@@ -7,9 +7,7 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
   const [taskData, setTaskData] = useState({ title: '', description: '' });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const token = useSessionStorage('token');
-  const userId = useSessionStorage('userId');
+  const token = JSON.parse(useSessionStorage('usertoken'));
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,10 +17,10 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
   const handleAddTask = async () => {
     const newTask = {
       ...taskData,
-      statusId: 1,
-      userId: userId,
+      statusId: 1
     };
     console.log(token);
+    console.log(newTask);
     setLoading(true);
     try {
       const response = await fetch('https://todo-app-wpbz.onrender.com/api/v1/task/create', {
@@ -35,6 +33,7 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
       });
       console.log("Response in Creating Task", response);
       if (!response.ok) {
+        console.log(response.message);
         throw new Error('Failed to create task');
       }
 
@@ -47,10 +46,9 @@ const CreateTask = ({ onClose, onSave, dataUpdate }) => {
 
       setTimeout(() => {
         setMessage(null);
-        // onClose();
-        dataUpdate();
+        onClose();
       }, 1000);
-      window.location.reload();
+      dataUpdate();
     } catch (error) {
       console.error('Error:', error);
       setMessage(error.message);
